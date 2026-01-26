@@ -39,3 +39,119 @@
 .prose a:hover {
 	text-decoration-color: currentColor;
 }
+
+/* Staggered entry animation for list items */
+@keyframes fade-up {
+	from {
+		opacity: 0;
+		transform: translateY(6px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.stagger-in > * {
+	opacity: 0;
+	animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.stagger-in > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-in > *:nth-child(2) { animation-delay: 60ms; }
+.stagger-in > *:nth-child(3) { animation-delay: 120ms; }
+.stagger-in > *:nth-child(4) { animation-delay: 180ms; }
+.stagger-in > *:nth-child(5) { animation-delay: 240ms; }
+.stagger-in > *:nth-child(6) { animation-delay: 300ms; }
+.stagger-in > *:nth-child(7) { animation-delay: 360ms; }
+.stagger-in > *:nth-child(8) { animation-delay: 420ms; }
+.stagger-in > *:nth-child(9) { animation-delay: 480ms; }
+.stagger-in > *:nth-child(10) { animation-delay: 540ms; }
+
+/* Page headings also fade in */
+@keyframes fade-in {
+	from { opacity: 0; transform: translateY(4px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+	animation: fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Scroll progress bar */
+@supports (animation-timeline: scroll()) {
+	.scroll-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 2px;
+		background: currentColor;
+		transform-origin: left;
+		transform: scaleX(0);
+		animation: grow-progress linear;
+		animation-timeline: scroll();
+		z-index: 100;
+		opacity: 0.4;
+	}
+
+	@keyframes grow-progress {
+		to {
+			transform: scaleX(1);
+		}
+	}
+}
+
+/* Film grain overlay */
+.grain::before {
+	content: '';
+	position: fixed;
+	inset: 0;
+	z-index: 9999;
+	pointer-events: none;
+	opacity: 0.035;
+	background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+	background-repeat: repeat;
+	background-size: 200px;
+}
+
+.dark .grain::before {
+	opacity: 0.06;
+}
+
+/* Dark mode radial wipe: disable default crossfade only during theme toggle */
+.theme-transitioning::view-transition-old(root),
+.theme-transitioning::view-transition-new(root) {
+	animation: none;
+	mix-blend-mode: normal;
+}
+
+.theme-transitioning::view-transition-old(root) {
+	z-index: 1;
+}
+
+.theme-transitioning::view-transition-new(root) {
+	z-index: 9999;
+}
+
+/* Truncated post preview on homepage */
+.post-truncated {
+	position: relative;
+	max-height: 24rem;
+	overflow: hidden;
+}
+
+.post-truncated::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 8rem;
+	background: linear-gradient(to bottom, transparent, var(--color-stone-50));
+	pointer-events: none;
+}
+
+.dark .post-truncated::after {
+	background: linear-gradient(to bottom, transparent, var(--color-stone-950));
+}
