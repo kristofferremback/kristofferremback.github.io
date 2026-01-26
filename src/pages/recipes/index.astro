@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RecipeCard from '../../components/RecipeCard.astro';
+
+const recipes = (await getCollection('recipes'))
+	.filter((recipe) => !recipe.data.draft)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title="Recipes — Kristoffer Remback">
+	<h1 class="text-3xl font-bold tracking-tight mb-8">Recipes</h1>
+	<ul class="space-y-4">
+		{recipes.map((recipe) => (
+			<li>
+				<RecipeCard
+					id={recipe.id}
+					title={recipe.data.title}
+					description={recipe.data.description}
+					macros={recipe.data.macros}
+					tags={recipe.data.tags}
+					prepTime={recipe.data.prepTime}
+					cookTime={recipe.data.cookTime}
+				/>
+			</li>
+		))}
+	</ul>
+	{recipes.length === 0 && (
+		<p class="text-stone-500 dark:text-stone-400">No recipes yet.</p>
+	)}
+</BaseLayout>

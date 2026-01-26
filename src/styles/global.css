@@ -1,0 +1,41 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+	--font-sans: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+ * Shiki dual theme: light theme is default, dark theme activates via .dark class.
+ * Astro generates code blocks with both --shiki-light and --shiki-dark CSS variables.
+ */
+.astro-code,
+.astro-code span {
+	color: var(--shiki-light) !important;
+	background-color: var(--shiki-light-bg) !important;
+}
+
+.dark .astro-code,
+.dark .astro-code span {
+	color: var(--shiki-dark) !important;
+	background-color: var(--shiki-dark-bg) !important;
+}
+
+.astro-code {
+	border-radius: 0.5rem !important;
+	padding: 1.25rem !important;
+}
+
+/* Warm up the prose link color */
+.prose a {
+	color: inherit;
+	text-decoration-color: rgb(168 162 158); /* stone-400 */
+	text-underline-offset: 3px;
+	transition: text-decoration-color 0.15s;
+}
+
+.prose a:hover {
+	text-decoration-color: currentColor;
+}

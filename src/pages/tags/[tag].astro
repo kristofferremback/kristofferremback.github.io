@@ -1,0 +1,78 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import RecipeCard from '../../components/RecipeCard.astro';
+
+export async function getStaticPaths() {
+	const posts = (await getCollection('blog')).filter((p) => !p.data.draft);
+	const recipes = (await getCollection('recipes')).filter((r) => !r.data.draft);
+
+	const tagSet = new Set<string>();
+	for (const post of posts) post.data.tags.forEach((t) => tagSet.add(t));
+	for (const recipe of recipes) recipe.data.tags.forEach((t) => tagSet.add(t));
+
+	return [...tagSet].map((tag) => ({
+		params: { tag },
+		props: {
+			tag,
+			posts: posts
+				.filter((p) => p.data.tags.includes(tag))
+				.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+			recipes: recipes
+				.filter((r) => r.data.tags.includes(tag))
+				.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+		},
+	}));
+}
+
+const { tag, posts, recipes } = Astro.props;
+---
+
+<BaseLayout title={`${tag} — Kristoffer Remback`}>
+	<h1 class="text-3xl font-bold tracking-tight mb-8">#{tag}</h1>
+
+	{posts.length > 0 && (
+		<section class="mb-12">
+			{recipes.length > 0 && (
+				<h2 class="text-lg font-semibold mb-4">Posts</h2>
+			)}
+			<ul class="space-y-8">
+				{posts.map((post) => (
+					<li>
+						<PostCard
+							id={post.id}
+							title={post.data.title}
+							description={post.data.description}
+							pubDate={post.data.pubDate}
+							tags={post.data.tags}
+						/>
+					</li>
+				))}
+			</ul>
+		</section>
+	)}
+
+	{recipes.length > 0 && (
+		<section>
+			{posts.length > 0 && (
+				<h2 class="text-lg font-semibold mb-4">Recipes</h2>
+			)}
+			<ul class="space-y-8">
+				{recipes.map((recipe) => (
+					<li>
+						<RecipeCard
+							id={recipe.id}
+							title={recipe.data.title}
+							description={recipe.data.description}
+							macros={recipe.data.macros}
+							tags={recipe.data.tags}
+							prepTime={recipe.data.prepTime}
+							cookTime={recipe.data.cookTime}
+						/>
+					</li>
+				))}
+			</ul>
+		</section>
+	)}
+</BaseLayout>

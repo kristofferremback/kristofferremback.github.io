@@ -1,0 +1,27 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const navLinks = [
+	{ href: '/', label: 'Blog' },
+	{ href: '/recipes', label: 'Recipes' },
+];
+---
+
+<header class="border-b border-stone-200 dark:border-stone-800">
+	<nav class="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
+		<a href="/" class="text-lg font-semibold tracking-tight hover:text-stone-500 dark:hover:text-stone-400 transition-colors">
+			Kristoffer Remback
+		</a>
+		<div class="flex items-center gap-6">
+			{navLinks.map(({ href, label }) => (
+				<a
+					href={href}
+					class="text-sm text-stone-600 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 transition-colors"
+				>
+					{label}
+				</a>
+			))}
+			<ThemeToggle />
+		</div>
+	</nav>
+</header>

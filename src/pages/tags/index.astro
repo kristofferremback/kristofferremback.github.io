@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog')).filter((p) => !p.data.draft);
+const recipes = (await getCollection('recipes')).filter((r) => !r.data.draft);
+
+const tagCounts = new Map<string, { blog: number; recipes: number }>();
+
+for (const post of posts) {
+	for (const tag of post.data.tags) {
+		const entry = tagCounts.get(tag) ?? { blog: 0, recipes: 0 };
+		entry.blog++;
+		tagCounts.set(tag, entry);
+	}
+}
+
+for (const recipe of recipes) {
+	for (const tag of recipe.data.tags) {
+		const entry = tagCounts.get(tag) ?? { blog: 0, recipes: 0 };
+		entry.recipes++;
+		tagCounts.set(tag, entry);
+	}
+}
+
+const tags = [...tagCounts.entries()]
+	.map(([tag, counts]) => ({ tag, total: counts.blog + counts.recipes, ...counts }))
+	.sort((a, b) => b.total - a.total);
+---
+
+<BaseLayout title="Tags — Kristoffer Remback">
+	<h1 class="text-3xl font-bold tracking-tight mb-8">Tags</h1>
+	<div class="flex flex-wrap gap-3">
+		{tags.map(({ tag, total }) => (
+			<a
+				href={`/tags/${tag}`}
+				class="px-3 py-1.5 rounded-full bg-stone-200 text-stone-700 hover:bg-stone-300 dark:bg-stone-800 dark:text-stone-300 dark:hover:bg-stone-700 transition-colors text-sm"
+			>
+				{tag}
+				<span class="ml-1 text-stone-500 dark:text-stone-400">{total}</span>
+			</a>
+		))}
+	</div>
+	{tags.length === 0 && (
+		<p class="text-stone-500 dark:text-stone-400">No tags yet.</p>
+	)}
+</BaseLayout>
