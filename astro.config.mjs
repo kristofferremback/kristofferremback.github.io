@@ -6,6 +6,7 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://kristofferremback.github.io',
+	base: '/personal-site',
 	integrations: [sitemap()],
 	vite: {
 		plugins: [tailwindcss()],
