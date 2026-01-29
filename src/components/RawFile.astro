@@ -7,9 +7,9 @@ interface Props {
 	wrap?: boolean;
 }
 
-const { content, lang = 'markdown', wrap = false } = Astro.props;
+const { content, lang = 'markdown', wrap = true } = Astro.props;
 ---
 
-<div data-wrap={wrap ? '' : undefined}>
-	<Code code={content} lang={lang} theme={{ light: 'github-light', dark: 'github-dark' }} />
+<div class="not-prose" data-wrap={wrap ? '' : undefined}>
+	<Code code={content} lang={lang} themes={{ light: 'github-light', dark: 'github-dark' }} />
 </div>
