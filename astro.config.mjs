@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
+import remarkGithubAlerts from 'remark-github-blockquote-alert';
 
 // https://astro.build/config
 export default defineConfig({
@@ -11,11 +12,22 @@ export default defineConfig({
 		plugins: [tailwindcss()],
 	},
 	markdown: {
+		remarkPlugins: [remarkGithubAlerts],
 		shikiConfig: {
 			themes: {
 				light: 'github-light',
 				dark: 'github-dark',
 			},
+			transformers: [
+				{
+					name: 'wrap',
+					pre(node) {
+						if (this.options.meta?.__raw?.includes('wrap')) {
+							node.properties['data-wrap'] = '';
+						}
+					},
+				},
+			],
 		},
 	},
 });

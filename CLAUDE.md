@@ -55,3 +55,15 @@ Drafts: set `draft: true` in frontmatter. Filtered out in production builds, vis
 - **Shiki themes**: Dual themes (`github-light`/`github-dark`) switched via CSS variables and `.dark` class.
 - **Portion calculator**: Vanilla JS (`is:inline`) reads ingredient/macro data from `data-*` attribute, recalculates proportionally on servings change.
 - **AI endpoints**: Static `.ts` files returning `text/markdown` content type for LLM consumption.
+
+## Invariants
+
+- **Dark and light mode support**: All UI elements must have good contrast in both light and dark mode. When adding colors, define both variants explicitly rather than relying on a single color to work in both contexts.
+  ```css
+  /* Good */
+  .element { color: rgb(37 99 235); }
+  .dark .element { color: rgb(96 165 250); }
+
+  /* Bad - single color may lack contrast in one mode */
+  .element { color: rgb(59 130 246); }
+  ```
