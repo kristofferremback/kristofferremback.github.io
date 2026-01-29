@@ -1,0 +1,123 @@
+---
+title: How Claude helped me lose 14kg
+description: How I lost 14kg in 5 months using Claude
+pubDate: 2026-01-29
+tags: [weight loss, claude, ai]
+---
+
+import SystemPrompt from "../assets/project-80/final-project-details.md?raw";
+import RawFile from "../../components/RawFile.astro";
+
+I've been overweight most of my adult life. Just a little bit, never dangerously so, but enough to have some noticeable effects. Snoring, mainly. I've previously made some haphazard attempts at losing weight here and there, not getting anywhere and kind of giving up. The scale crept up and eventually settled around 90kg by the time I turned 30.
+
+I wish I remember why I decided to do something about it last fall, but I don't. Sorry.
+
+## The plan
+
+Anyway, come August 2025 the scale read 93.9kg and for whatever reason, _it was time_. Since Claude has become an increasingly big part of my life, I asked him to help me plan a weight loss project. Here's the exact prompt I used to get started:
+
+```md wrap
+Can you help me structure a Claude Project description to improve my overall health. I want you to help me designing the project description by asking thoughtful questions that all touch on improving my health, including capturing where I am now.
+```
+
+It's not very detailed, basically just _"ask me questions to plan this out"_. I find this approach very useful when I don't know enough to plan something out myself, so discussing with Claude helped me find clarity in what I wanted out of things. I do the same with colleagues at work. Sort of rubber ducking my health over here. 🦆
+
+We concocted an ambitious plan I **definitely didn't end up following** (before and after photos, daily tracking, weekly check-ins, workout density targets, etc.), but it laid the foundation for what I ended up doing. We overcomplicated things a lot which maybe wasn't great, but it happened to work out this time. If I were to do it again, I would ruthlessly simplify things. For me the important part was to start tracking what I ate to help me know when to stop eating. I don't know if I loved how data driven my life became, but it sure helped me stay on track.
+
+Here's an overview of the initial plan I ended up sticking to:
+
+- Target weight: 85kg
+- Duration: 6 months
+- Target calories: 2300kcal (estimated 500kcal deficit per day)
+- Protein target: 150g per day (about 1.75g of protein per kg of target body weight at 85kg)
+- Track all food intake as precisely as possible
+
+It took me about two months to get to 85kg which I found was far easier than expected. Eating 2300kcal is actually quite a lot of food, especially when making swaps to lower calorie foods (often just meant using low-fat versions of foods). And thanks to my Ninja CREAMi, I could have ice cream **every night** (I'm serious, that loud machine ran nearly every night during the project).
+
+After the first two months, we adjusted the project, calling it Project 80 and upped my calories to 2500kcal. Just about this time I also started tracking my fiber intake as it's also important for your overall health. I also ditched the duration and just went on until finished:
+
+- Target weight: 80kg
+- Duration: until finished
+- Target calories: 2500kcal (estimated 300kcal deficit per day)
+- Protein target: 150g per day (now about 1.85g of protein per kg of body weight)
+- Fiber target: 30g per day
+- Keep up the tracking as usual, now with fiber
+
+I used Claude.ai's Projects feature which let me add and generate artifacts to the project knowledge base which Claude could use as context for follow-ups. I somewhat quickly learned that once the project's knowledge base grows, it stops living in context and starts requiring RAG (i.e., has to be looked up instead of inherently _known_). I had to change the project details for the models to reliably use the knowledge base after the cutoff. This became especially important when I switched to using the faster and cheaper (but dumber) model Haiku instead of Sonnet (I was on the $20 Claude plan at the time and I wanted to squeeze more usage out of it).
+
+At the Claude Project RAG cutoff, I had to do some significant changes to the project details to keep the agent from asking questions he could find the answers to himself. Primarily detailing how to find stuff and moving a long list of staple foods from the knowledge base to the project details.
+
+Below is the exact project details I used in the end:
+
+<details>
+<summary>Full system prompt</summary>
+
+<RawFile content={SystemPrompt} />
+
+</details>
+
+## The process
+
+My actual tracking was quite simple. Every day I would create a new chat in Project 80 to track what I ate, usually as I ate (which my wife quite reasonably didn't love but tolerated). I had Claude go over all my chats and synthesize a highly compressed _typical daily chat_:
+
+```md wrap
+Kristoffer: Morning, let's track! Having my typical vaniljkvarg bowl.
+
+Claude: Logged. 502 kcal, 36g protein, 12g fiber. You've got 1,998 kcal remaining.
+
+Kristoffer: Lunch is the packed box from yesterday's bolognese.
+
+Claude: Added. Running total: 1,167 kcal, 89g protein, 16g fiber.
+
+Kristoffer: Had 2 pieces of the chocolate protein bark with coffee.
+
+Claude: Got it. Now at 1,356 kcal, 96g protein, 19g fiber.
+
+Kristoffer: Dinner is tacos - 2 portions with the usual toppings.
+
+Claude: Logged. 2,089 kcal, 139g protein, 26g fiber. Room for dessert?
+
+Kristoffer: Half batch protein ice cream with marshmallows and chocolate.
+
+Claude: Final: 2,408 kcal (96%), 162g protein (108%), 36g fiber (120%). Solid day.
+
+Kristoffer: Perfect, thanks!
+```
+
+Because I was tracking using an agentic LLM, I could also do stuff like sharing the full recipe and telling Claude my fraction of the meal, arguing about satiation when estimates were too high, or ask for suggestions on how to optimize a snack to hit as close to my target calories as possible. It was also very freeing to give it rough measurements of cakes to try to estimate macros based on volume, known average densities, and typical ingredients.
+
+```md wrap
+Kristoffer: Made korvstroganoff for dinner. Recipe was 670g falukorv, 5dl matlagningsgrädde, onion, tomato paste. I had about 1/7 of the total with 120g cooked pasta.
+
+---
+
+Kristoffer: The kantarellpaj estimate of 750 calories feels too high - I'm not that full. Can we adjust to 700?
+
+---
+
+Kristoffer: I have 282 calories left. Help me build the ultimate snack to get as close to target as possible.
+
+Claude: How about: 2 Oreos (106 kcal), 1 Dave & Jon's chili mango date (45 kcal), 10g Marabou dark chocolate (55 kcal), and 15g chili mango (76 kcal). Total: 282 kcal exactly.
+
+Kristoffer: Perfect, let's do it.
+
+---
+
+Kristoffer: The kantarellpaj piece was roughly 2.5 x 5 x 5 cm.
+```
+
+_I'm sorry for the inclusion of Swedish words above. Claude does fine with multi-lingual prompts, and not everything makes sense when translated to English._
+
+## The results
+
+_If I may brag a little._
+
+Mid December 2025, I reached 80kg, right before the winter holidays (thankfully, I would not have wanted to track my Christmas snacking). I was surprised it went so smoothly, because the entire thing felt too easy (not trying to brag, I'm genuinely surprised it went this well). And so far end of January 2026, I'm still hovering around 80kg.
+
+Near the end of the project, I had learned to listen to my fullness signals, I had actually learned to stop eating when I was full instead of when the plate was empty. I've always admired my wife for doing this, so I'm quite proud of myself for finally _getting it_!
+
+I also found myself developing an intuition for how many calories were in foods after first being surprised by how dense some foods are while others are confusingly low. For example, it's surprisingly OK to have a piece of cake in the afternoon as a piece typically is around ~300kcal, whereas sharing a cheese platter with the missus may be closer to 1000kcal (which is a meal and a half...). Kladdkaka was also surprisingly high, but I got used to it and now love it. If you're ever in Sweden, please try Kladdkaka if you haven't. It's glorious.
+
+Another thing I didn't expect was how much easier everything became after losing the weight. Simple stuff like standing up from the couch, picking up my daughter, or walking up the stairs became noticeably easier. This baffled me. I also don't snore as much (this my wife is very happy about).
+
+I'll make sure to share some of the recipes over in the Recipes tab.
