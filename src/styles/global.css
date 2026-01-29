@@ -132,6 +132,34 @@
 	text-decoration-color: currentColor;
 }
 
+/* Linkable heading anchors */
+.prose :is(h1, h2, h3, h4, h5, h6) {
+	position: relative;
+}
+
+.prose :is(h1, h2, h3, h4, h5, h6) > a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.prose :is(h1, h2, h3, h4, h5, h6) > a:hover {
+	text-decoration: none;
+}
+
+.heading-anchor {
+	position: absolute;
+	right: 100%;
+	padding-right: 0.5rem;
+	opacity: 0;
+	color: var(--color-stone-400);
+	font-weight: 400;
+	transition: opacity 0.15s;
+}
+
+.prose :is(h1, h2, h3, h4, h5, h6):hover .heading-anchor {
+	opacity: 1;
+}
+
 /* Staggered entry animation for list items */
 @keyframes fade-up {
 	from {

@@ -1,5 +1,12 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
 
 interface Props {
 	id: string;
@@ -8,9 +15,10 @@ interface Props {
 	pubDate: Date;
 	updatedDate?: Date;
 	tags: string[];
+	headings?: Heading[];
 }
 
-const { id, title, description, pubDate, updatedDate, tags } = Astro.props;
+const { id, title, description, pubDate, updatedDate, tags, headings = [] } = Astro.props;
 const dateStr = pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 const updatedStr = updatedDate?.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
@@ -45,4 +53,5 @@ const updatedStr = updatedDate?.toLocaleDateString('en-US', { year: 'numeric', m
 			</a>
 		</footer>
 	</article>
+	<TableOfContents headings={headings} />
 </BaseLayout>
