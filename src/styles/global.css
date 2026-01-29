@@ -28,7 +28,8 @@
 	padding: 1.25rem !important;
 }
 
-.astro-code[data-wrap] code {
+.astro-code[data-wrap] code,
+[data-wrap] .astro-code code {
 	white-space: pre-wrap;
 	word-break: break-word;
 }

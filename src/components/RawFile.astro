@@ -1,0 +1,15 @@
+---
+import { Code } from 'astro:components';
+
+interface Props {
+	content: string;
+	lang?: string;
+	wrap?: boolean;
+}
+
+const { content, lang = 'markdown', wrap = false } = Astro.props;
+---
+
+<div data-wrap={wrap ? '' : undefined}>
+	<Code code={content} lang={lang} theme={{ light: 'github-light', dark: 'github-dark' }} />
+</div>

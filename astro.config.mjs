@@ -2,12 +2,13 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
+import mdx from '@astrojs/mdx';
 import remarkGithubAlerts from 'remark-github-blockquote-alert';
 
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://kristofferremback.github.io',
-	integrations: [sitemap()],
+	integrations: [sitemap(), mdx()],
 	vite: {
 		plugins: [tailwindcss()],
 	},
