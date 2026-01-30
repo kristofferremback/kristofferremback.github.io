@@ -10,6 +10,7 @@ interface Macros {
 	protein: number;
 	carbs: number;
 	fat: number;
+	fiber: number;
 }
 
 interface Props {
@@ -24,6 +25,7 @@ const totalMacros = {
 	protein: macros.protein * servings,
 	carbs: macros.carbs * servings,
 	fat: macros.fat * servings,
+	fiber: macros.fiber * servings,
 };
 const data = JSON.stringify({ servings, ingredients, macros });
 ---
@@ -50,22 +52,26 @@ const data = JSON.stringify({ servings, ingredients, macros });
 			<div class="px-4 py-2 bg-stone-100 dark:bg-stone-800/50 text-xs font-medium uppercase tracking-wider text-stone-500 dark:text-stone-400">
 				Per serving
 			</div>
-			<div class="grid grid-cols-4 divide-x divide-stone-200 dark:divide-stone-800">
-				<div class="px-3 py-3 text-center">
+			<div class="grid grid-cols-5 divide-x divide-stone-200 dark:divide-stone-800">
+				<div class="px-2 py-3 text-center">
 					<div id="macro-calories-per" class="text-lg font-bold">{macros.calories}</div>
 					<div class="text-[11px] text-stone-500 dark:text-stone-400">kcal</div>
 				</div>
-				<div class="px-3 py-3 text-center">
+				<div class="px-2 py-3 text-center">
 					<div id="macro-protein-per" class="text-lg font-bold">{macros.protein}<span class="text-sm font-normal">g</span></div>
 					<div class="text-[11px] text-stone-500 dark:text-stone-400">protein</div>
 				</div>
-				<div class="px-3 py-3 text-center">
+				<div class="px-2 py-3 text-center">
 					<div id="macro-carbs-per" class="text-lg font-bold">{macros.carbs}<span class="text-sm font-normal">g</span></div>
 					<div class="text-[11px] text-stone-500 dark:text-stone-400">carbs</div>
 				</div>
-				<div class="px-3 py-3 text-center">
+				<div class="px-2 py-3 text-center">
 					<div id="macro-fat-per" class="text-lg font-bold">{macros.fat}<span class="text-sm font-normal">g</span></div>
 					<div class="text-[11px] text-stone-500 dark:text-stone-400">fat</div>
+				</div>
+				<div class="px-2 py-3 text-center">
+					<div id="macro-fiber-per" class="text-lg font-bold">{macros.fiber}<span class="text-sm font-normal">g</span></div>
+					<div class="text-[11px] text-stone-500 dark:text-stone-400">fiber</div>
 				</div>
 			</div>
 		</div>
@@ -75,22 +81,26 @@ const data = JSON.stringify({ servings, ingredients, macros });
 			<div class="px-4 py-2 bg-stone-100 dark:bg-stone-800/50 text-xs font-medium uppercase tracking-wider text-stone-500 dark:text-stone-400">
 				Total
 			</div>
-			<div class="grid grid-cols-4 divide-x divide-stone-200 dark:divide-stone-800">
-				<div class="px-3 py-3 text-center">
+			<div class="grid grid-cols-5 divide-x divide-stone-200 dark:divide-stone-800">
+				<div class="px-2 py-3 text-center">
 					<div id="macro-calories-total" class="text-lg font-bold">{totalMacros.calories}</div>
 					<div class="text-[11px] text-stone-500 dark:text-stone-400">kcal</div>
 				</div>
-				<div class="px-3 py-3 text-center">
+				<div class="px-2 py-3 text-center">
 					<div id="macro-protein-total" class="text-lg font-bold">{totalMacros.protein}<span class="text-sm font-normal">g</span></div>
 					<div class="text-[11px] text-stone-500 dark:text-stone-400">protein</div>
 				</div>
-				<div class="px-3 py-3 text-center">
+				<div class="px-2 py-3 text-center">
 					<div id="macro-carbs-total" class="text-lg font-bold">{totalMacros.carbs}<span class="text-sm font-normal">g</span></div>
 					<div class="text-[11px] text-stone-500 dark:text-stone-400">carbs</div>
 				</div>
-				<div class="px-3 py-3 text-center">
+				<div class="px-2 py-3 text-center">
 					<div id="macro-fat-total" class="text-lg font-bold">{totalMacros.fat}<span class="text-sm font-normal">g</span></div>
 					<div class="text-[11px] text-stone-500 dark:text-stone-400">fat</div>
+				</div>
+				<div class="px-2 py-3 text-center">
+					<div id="macro-fiber-total" class="text-lg font-bold">{totalMacros.fiber}<span class="text-sm font-normal">g</span></div>
+					<div class="text-[11px] text-stone-500 dark:text-stone-400">fiber</div>
 				</div>
 			</div>
 		</div>
@@ -141,11 +151,13 @@ const data = JSON.stringify({ servings, ingredients, macros });
 			setMacro('macro-protein-per', recipe.macros.protein, 'g');
 			setMacro('macro-carbs-per', recipe.macros.carbs, 'g');
 			setMacro('macro-fat-per', recipe.macros.fat, 'g');
+			setMacro('macro-fiber-per', recipe.macros.fiber || 0, 'g');
 
 			setMacro('macro-calories-total', round(recipe.macros.calories * newServings));
 			setMacro('macro-protein-total', round(recipe.macros.protein * newServings), 'g');
 			setMacro('macro-carbs-total', round(recipe.macros.carbs * newServings), 'g');
 			setMacro('macro-fat-total', round(recipe.macros.fat * newServings), 'g');
+			setMacro('macro-fiber-total', round((recipe.macros.fiber || 0) * newServings), 'g');
 
 			var amounts = document.querySelectorAll('#ingredients-list .ingredient-amount');
 			for (var i = 0; i < amounts.length; i++) {

@@ -29,6 +29,7 @@ const recipes = defineCollection({
 			protein: z.number(),
 			carbs: z.number(),
 			fat: z.number(),
+			fiber: z.number().default(0),
 		}),
 		ingredients: z.array(
 			z.object({

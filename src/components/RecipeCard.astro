@@ -1,9 +1,11 @@
 ---
+import MacroBadges from './MacroBadges';
+
 interface Props {
 	id: string;
 	title: string;
 	description: string;
-	macros: { calories: number; protein: number; carbs: number; fat: number };
+	macros: { calories: number; protein: number; carbs: number; fat: number; fiber: number };
 	tags: string[];
 	prepTime?: string;
 	cookTime?: string;
@@ -12,8 +14,8 @@ interface Props {
 const { id, title, description, macros, tags, prepTime, cookTime } = Astro.props;
 ---
 
-<article class="group">
-	<a href={`/recipes/${id}`} class="block rounded-xl border border-stone-200 dark:border-stone-800 p-5 transition-all hover:border-stone-400 dark:hover:border-stone-600 hover:shadow-sm" transition:name={`recipe-${id}`}>
+<article class="group rounded-xl border border-stone-200 dark:border-stone-800 p-5 transition-all hover:border-stone-400 dark:hover:border-stone-600 hover:shadow-sm" transition:name={`recipe-${id}`}>
+	<a href={`/recipes/${id}`} class="block">
 		<div class="flex items-start justify-between gap-4">
 			<h2 class="text-lg font-bold">{title}</h2>
 			{(prepTime || cookTime) && (
@@ -24,20 +26,18 @@ const { id, title, description, macros, tags, prepTime, cookTime } = Astro.props
 			)}
 		</div>
 		<p class="mt-1.5 text-sm text-stone-600 dark:text-stone-300">{description}</p>
-		<div class="mt-4 flex items-center justify-between">
-			<div class="flex gap-2">
-				{tags.map((tag) => (
-					<span class="text-xs px-2 py-0.5 rounded-full bg-stone-200/70 text-stone-600 dark:bg-stone-800 dark:text-stone-400">
-						{tag}
-					</span>
-				))}
-			</div>
-			<div class="flex gap-px text-xs">
-				<span class="px-2 py-1 bg-stone-100 dark:bg-stone-800 rounded-l-md font-medium">{macros.calories}<span class="ml-0.5 font-normal text-stone-500 dark:text-stone-400">kcal</span></span>
-				<span class="px-2 py-1 bg-stone-100 dark:bg-stone-800 font-medium">{macros.protein}<span class="ml-0.5 font-normal text-stone-500 dark:text-stone-400">P</span></span>
-				<span class="px-2 py-1 bg-stone-100 dark:bg-stone-800 font-medium">{macros.carbs}<span class="ml-0.5 font-normal text-stone-500 dark:text-stone-400">C</span></span>
-				<span class="px-2 py-1 bg-stone-100 dark:bg-stone-800 rounded-r-md font-medium">{macros.fat}<span class="ml-0.5 font-normal text-stone-500 dark:text-stone-400">F</span></span>
-			</div>
-		</div>
 	</a>
+	<div class="mt-4 flex items-center justify-between">
+		<div class="flex gap-2">
+			{tags.map((tag) => (
+				<a
+					href={`/tags/${tag}`}
+					class="text-xs px-2 py-0.5 rounded-full bg-stone-200/70 text-stone-600 hover:bg-stone-300 dark:bg-stone-800 dark:text-stone-400 dark:hover:bg-stone-700 transition-colors"
+				>
+					{tag}
+				</a>
+			))}
+		</div>
+		<MacroBadges macros={macros} client:load />
+	</div>
 </article>
