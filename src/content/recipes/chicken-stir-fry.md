@@ -6,34 +6,29 @@ tags: [chicken, quick, dinner]
 prepTime: 15 min
 cookTime: 10 min
 servings: 2
-macros:
-  calories: 420
-  protein: 38
-  carbs: 28
-  fat: 16
 ingredients:
-  - name: chicken breast
+  - ref: chicken-breast
     amount: 400
     unit: g
-  - name: broccoli
+  - ref: broccoli
     amount: 200
     unit: g
-  - name: bell pepper
+  - ref: bell-pepper
     amount: 1
     unit: whole
-  - name: soy sauce
+  - ref: soy-sauce
     amount: 3
     unit: tbsp
-  - name: fresh ginger
+  - ref: fresh-ginger
     amount: 1
     unit: tbsp
-  - name: garlic
+  - ref: garlic
     amount: 2
     unit: cloves
-  - name: sesame oil
+  - ref: sesame-oil
     amount: 1
     unit: tbsp
-  - name: rice
+  - ref: white-rice
     amount: 150
     unit: g
 ---

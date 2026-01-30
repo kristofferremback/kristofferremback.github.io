@@ -2,10 +2,19 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import RecipeCard from '../../components/RecipeCard.astro';
+import { calculateRecipeMacros } from '../../lib/macros';
 
-const recipes = (await getCollection('recipes'))
+const rawRecipes = (await getCollection('recipes'))
 	.filter((recipe) => !recipe.data.draft)
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const recipes = rawRecipes.map((recipe) => {
+	const { perServing } = calculateRecipeMacros(
+		recipe.data.ingredients,
+		recipe.data.servings
+	);
+	return { ...recipe, macros: perServing };
+});
 ---
 
 <BaseLayout title="Recipes — Kristoffer Remback">
@@ -17,7 +26,7 @@ const recipes = (await getCollection('recipes'))
 					id={recipe.id}
 					title={recipe.data.title}
 					description={recipe.data.description}
-					macros={recipe.data.macros}
+					macros={recipe.macros}
 					tags={recipe.data.tags}
 					prepTime={recipe.data.prepTime}
 					cookTime={recipe.data.cookTime}

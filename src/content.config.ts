@@ -13,6 +13,13 @@ const blog = defineCollection({
 	}),
 });
 
+const ingredientSchema = z.object({
+	ref: z.string(),
+	amount: z.number(),
+	unit: z.string(),
+	grams_per_unit: z.number().optional(),
+});
+
 const recipes = defineCollection({
 	loader: glob({ pattern: '**/*.md', base: './src/content/recipes' }),
 	schema: z.object({
@@ -24,20 +31,7 @@ const recipes = defineCollection({
 		prepTime: z.string().optional(),
 		cookTime: z.string().optional(),
 		servings: z.number(),
-		macros: z.object({
-			calories: z.number(),
-			protein: z.number(),
-			carbs: z.number(),
-			fat: z.number(),
-			fiber: z.number().default(0),
-		}),
-		ingredients: z.array(
-			z.object({
-				name: z.string(),
-				amount: z.number(),
-				unit: z.string(),
-			})
-		),
+		ingredients: z.array(ingredientSchema),
 	}),
 });
 

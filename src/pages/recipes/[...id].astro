@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import RecipeLayout from '../../layouts/RecipeLayout.astro';
+import { calculateRecipeMacros } from '../../lib/macros';
 
 export async function getStaticPaths() {
 	const recipes = await getCollection('recipes');
@@ -11,6 +12,17 @@ export async function getStaticPaths() {
 
 const { recipe } = Astro.props;
 const { Content } = await render(recipe);
+
+const { perServing, resolved } = calculateRecipeMacros(
+	recipe.data.ingredients,
+	recipe.data.servings
+);
+
+const ingredients = resolved.map((r) => ({
+	name: r.name,
+	amount: r.amount,
+	unit: r.unit,
+}));
 ---
 
 <RecipeLayout
@@ -20,8 +32,8 @@ const { Content } = await render(recipe);
 	prepTime={recipe.data.prepTime}
 	cookTime={recipe.data.cookTime}
 	servings={recipe.data.servings}
-	macros={recipe.data.macros}
-	ingredients={recipe.data.ingredients}
+	macros={perServing}
+	ingredients={ingredients}
 	tags={recipe.data.tags}
 >
 	<Content />

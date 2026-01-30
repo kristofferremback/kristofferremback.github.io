@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
+import yaml from '@rollup/plugin-yaml';
 import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
 import remarkGithubAlerts from 'remark-github-blockquote-alert';
@@ -14,7 +15,7 @@ export default defineConfig({
     site: 'https://kristofferremback.github.io',
     integrations: [sitemap(), mdx(), react()],
     vite: {
-        plugins: [tailwindcss()],
+        plugins: [tailwindcss(), yaml()],
     },
     markdown: {
         remarkPlugins: [remarkGithubAlerts],
