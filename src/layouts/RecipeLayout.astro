@@ -1,11 +1,14 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import PortionCalculator from '../components/PortionCalculator.astro';
+import RecipeSidebar from '../components/RecipeSidebar.astro';
+import { AIChatButton } from '../components/AIChatButton';
 
 interface Ingredient {
 	name: string;
 	amount: number;
 	unit: string;
+	gPerDl?: number;
 }
 
 interface Section {
@@ -23,6 +26,12 @@ interface Macros {
 	fiber: number;
 }
 
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
+
 interface Props {
 	id: string;
 	title: string;
@@ -33,9 +42,10 @@ interface Props {
 	macros: Macros;
 	ingredients: Ingredients;
 	tags: string[];
+	headings?: Heading[];
 }
 
-const { id, title, description, prepTime, cookTime, servings, macros, ingredients, tags } = Astro.props;
+const { id, title, description, prepTime, cookTime, servings, macros, ingredients, tags, headings = [] } = Astro.props;
 ---
 
 <BaseLayout title={`${title} — Recipes`} description={description}>
@@ -80,9 +90,13 @@ const { id, title, description, prepTime, cookTime, servings, macros, ingredient
 			<slot />
 		</div>
 		<footer class="mt-12 pt-6 border-t border-stone-200 dark:border-stone-800 text-sm text-stone-500 dark:text-stone-400">
-			<a href={`/ai/recipes/${id}`} class="hover:text-stone-900 dark:hover:text-stone-100 transition-colors">
-				View as Markdown
-			</a>
+			<div class="flex items-center justify-between gap-4 flex-wrap">
+				<a href={`/ai/recipes/${id}`} class="hover:text-stone-900 dark:hover:text-stone-100 transition-colors">
+					View as Markdown
+				</a>
+				<AIChatButton recipeTitle={title} recipeId={id} client:load />
+			</div>
 		</footer>
 	</article>
+	<RecipeSidebar headings={headings} ingredients={ingredients} servings={servings} />
 </BaseLayout>

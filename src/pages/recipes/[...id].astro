@@ -11,17 +11,21 @@ export async function getStaticPaths() {
 }
 
 const { recipe } = Astro.props;
-const { Content } = await render(recipe);
+const { Content, headings } = await render(recipe);
 
 const { perServing, resolved } = calculateRecipeMacros(
 	recipe.data.ingredients,
 	recipe.data.servings
 );
 
-const toDisplay = (r: { name: string; amount: number; unit: string }) => ({
+import type { ResolvedIngredient } from '../../lib/macros';
+
+const toDisplay = (r: ResolvedIngredient) => ({
 	name: r.name,
 	amount: r.amount,
 	unit: r.unit,
+	gPerDl: r.gPerDl,
+	macros: r.macros,
 });
 
 const ingredients = isSectioned(resolved)
@@ -44,6 +48,7 @@ const ingredients = isSectioned(resolved)
 	macros={perServing}
 	ingredients={ingredients}
 	tags={recipe.data.tags}
+	headings={headings}
 >
 	<Content />
 </RecipeLayout>

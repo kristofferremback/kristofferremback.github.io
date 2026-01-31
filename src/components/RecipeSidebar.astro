@@ -1,0 +1,244 @@
+---
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
+
+interface Ingredient {
+	name: string;
+	amount: number;
+	unit: string;
+}
+
+interface Section {
+	name: string;
+	ingredients: Ingredient[];
+}
+
+type Ingredients = Ingredient[] | { sections: Section[] };
+
+interface Props {
+	headings: Heading[];
+	ingredients: Ingredients;
+	servings: number;
+}
+
+const { headings, ingredients, servings } = Astro.props;
+const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+
+const isSectioned = 'sections' in ingredients;
+const flatIngredients = isSectioned
+	? ingredients.sections.flatMap((s) => s.ingredients)
+	: ingredients;
+
+function cleanHeadingText(text: string): string {
+	return text.replace(/^#\s*/, '');
+}
+
+function round(n: number): number {
+	return Math.round(n * 10) / 10;
+}
+
+const ingredientData = JSON.stringify({
+	servings,
+	ingredients: flatIngredients,
+});
+---
+
+<aside
+	id="recipe-sidebar"
+	class="hidden xl:block fixed top-0 right-0 h-screen w-56 pt-32 pr-8"
+	aria-label="Recipe navigation"
+	data-ingredients={ingredientData}
+>
+	<div class="sticky top-32 space-y-8">
+		<!-- Section navigation -->
+		{tocHeadings.length > 0 && (
+			<nav>
+				<h2 class="text-xs font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-3">
+					On this page
+				</h2>
+				<ul class="space-y-2 text-sm border-l border-stone-200 dark:border-stone-800">
+					{tocHeadings.map((heading) => (
+						<li>
+							<a
+								href={`#${heading.slug}`}
+								class:list={[
+									'toc-link block py-1 transition-colors border-l -ml-px',
+									heading.depth === 3 ? 'pl-6' : 'pl-4',
+								]}
+								data-slug={heading.slug}
+							>
+								{cleanHeadingText(heading.text)}
+							</a>
+						</li>
+					))}
+				</ul>
+			</nav>
+		)}
+
+		<!-- Ingredients (fades in when main list scrolls away) -->
+		<div id="sidebar-ingredients" class="opacity-0 transition-opacity duration-300 pointer-events-none">
+			<h2 class="text-xs font-semibold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-3">
+				Ingredients
+			</h2>
+			<ul id="sidebar-ingredients-list" class="text-sm border-l border-stone-200 dark:border-stone-800 pl-4 space-y-1.5 max-h-[40vh] overflow-y-auto">
+				{flatIngredients.map(({ name, amount, unit }) => (
+					<li class="flex items-center justify-between gap-2">
+						<span class="text-stone-600 dark:text-stone-400 truncate">{name}</span>
+						<span class="text-stone-500 dark:text-stone-500 tabular-nums whitespace-nowrap">
+							<span class="sidebar-ingredient-amount">{round(amount)}</span> {unit}
+						</span>
+					</li>
+				))}
+			</ul>
+		</div>
+
+		<!-- Back to top -->
+		<a
+			href="#"
+			class="back-to-top block text-sm text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300 transition-colors opacity-0 pointer-events-none"
+			aria-label="Back to top"
+		>
+			&uarr; Back to top
+		</a>
+	</div>
+</aside>
+
+<script is:inline>
+	(function () {
+		var sidebar = document.getElementById('recipe-sidebar');
+		if (!sidebar) return;
+
+		var tocLinks = sidebar.querySelectorAll('.toc-link');
+		var backToTop = sidebar.querySelector('.back-to-top');
+		var sidebarIngredients = document.getElementById('sidebar-ingredients');
+		var ingredientsHeading = document.getElementById('ingredients-heading');
+		var sidebarData = JSON.parse(sidebar.dataset.ingredients);
+		var baseServings = sidebarData.servings;
+
+		// TOC active state
+		if (tocLinks.length > 0) {
+			var headingIds = Array.from(tocLinks).map(function (link) {
+				return link.dataset.slug;
+			});
+			var headings = headingIds
+				.map(function (id) {
+					return document.getElementById(id);
+				})
+				.filter(Boolean);
+
+			var activeId = null;
+
+			var tocObserver = new IntersectionObserver(
+				function (entries) {
+					entries.forEach(function (entry) {
+						if (entry.isIntersecting) {
+							activeId = entry.target.id;
+							updateActiveLink();
+						}
+					});
+				},
+				{
+					rootMargin: '-80px 0px -70% 0px',
+					threshold: 0,
+				}
+			);
+
+			headings.forEach(function (heading) {
+				tocObserver.observe(heading);
+			});
+
+			function updateActiveLink() {
+				tocLinks.forEach(function (link) {
+					var isActive = link.dataset.slug === activeId;
+					link.classList.toggle('text-stone-900', isActive);
+					link.classList.toggle('dark:text-stone-100', isActive);
+					link.classList.toggle('border-stone-900', isActive);
+					link.classList.toggle('dark:border-stone-100', isActive);
+					link.classList.toggle('text-stone-400', !isActive);
+					link.classList.toggle('dark:text-stone-500', !isActive);
+					link.classList.toggle('border-transparent', !isActive);
+				});
+			}
+
+			// Smooth scroll on click
+			tocLinks.forEach(function (link) {
+				link.addEventListener('click', function (e) {
+					e.preventDefault();
+					var target = document.getElementById(link.dataset.slug);
+					if (target) {
+						target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+						history.pushState(null, '', '#' + link.dataset.slug);
+					}
+				});
+			});
+
+			// Set initial active
+			if (window.location.hash) {
+				activeId = window.location.hash.slice(1);
+			} else if (headings[0]) {
+				activeId = headings[0].id;
+			}
+			updateActiveLink();
+		}
+
+		// Ingredients visibility
+		if (sidebarIngredients && ingredientsHeading) {
+			var ingredientsObserver = new IntersectionObserver(
+				function (entries) {
+					entries.forEach(function (entry) {
+						var visible = !entry.isIntersecting;
+						sidebarIngredients.classList.toggle('opacity-0', !visible);
+						sidebarIngredients.classList.toggle('opacity-100', visible);
+						sidebarIngredients.classList.toggle('pointer-events-none', !visible);
+						sidebarIngredients.classList.toggle('pointer-events-auto', visible);
+					});
+				},
+				{
+					rootMargin: '-100px 0px 0px 0px',
+					threshold: 0,
+				}
+			);
+
+			ingredientsObserver.observe(ingredientsHeading);
+		}
+
+		// Back to top
+		if (backToTop) {
+			backToTop.addEventListener('click', function (e) {
+				e.preventDefault();
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+				history.pushState(null, '', window.location.pathname);
+			});
+
+			window.addEventListener(
+				'scroll',
+				function () {
+					var show = window.scrollY > 400;
+					backToTop.classList.toggle('opacity-0', !show);
+					backToTop.classList.toggle('pointer-events-none', !show);
+					backToTop.classList.toggle('opacity-100', show);
+					backToTop.classList.toggle('pointer-events-auto', show);
+				},
+				{ passive: true }
+			);
+		}
+
+		// Sync with portion calculator
+		function round(n) {
+			return Math.round(n * 10) / 10;
+		}
+
+		window.addEventListener('ingredients-update', function (e) {
+			var amounts = e.detail.amounts;
+			var sidebarAmounts = document.querySelectorAll('.sidebar-ingredient-amount');
+			for (var i = 0; i < sidebarAmounts.length; i++) {
+				if (amounts[i] !== undefined) {
+					sidebarAmounts[i].textContent = round(amounts[i]);
+				}
+			}
+		});
+	})();
+</script>

@@ -1,8 +1,21 @@
 ---
+import { IngredientAmount } from './IngredientAmount';
+import { IngredientMacros } from './IngredientMacros';
+
+interface Macros {
+	calories: number;
+	protein: number;
+	carbs: number;
+	fat: number;
+	fiber: number;
+}
+
 interface Ingredient {
 	name: string;
 	amount: number;
 	unit: string;
+	gPerDl?: number;
+	macros?: Macros;
 }
 
 interface Section {
@@ -40,6 +53,8 @@ const totalMacros = {
 	fiber: macros.fiber * servings,
 };
 const data = JSON.stringify({ servings, ingredients: flatIngredients, macros });
+
+let ingredientIndex = 0;
 ---
 
 <div id="portion-calculator" data-recipe={data} class="grid md:grid-cols-[1fr_1.2fr] gap-8">
@@ -89,7 +104,10 @@ const data = JSON.stringify({ servings, ingredients: flatIngredients, macros });
 		</div>
 
 		<!-- Total -->
-		<div class="mt-3 rounded-lg border border-stone-200 dark:border-stone-800 overflow-hidden">
+		<div
+			id="macro-total-section"
+			class="mt-3 rounded-lg border border-stone-200 dark:border-stone-800 overflow-hidden transition-all duration-300 ease-out"
+		>
 			<div class="px-4 py-2 bg-stone-100 dark:bg-stone-800/50 text-xs font-medium uppercase tracking-wider text-stone-500 dark:text-stone-400">
 				Total
 			</div>
@@ -120,35 +138,59 @@ const data = JSON.stringify({ servings, ingredients: flatIngredients, macros });
 
 	<!-- Right column: ingredients -->
 	<div>
-		<h3 class="text-sm font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-5">Ingredients</h3>
+		<h3 id="ingredients-heading" class="text-sm font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-5">Ingredients</h3>
 		{isSectioned ? (
 			<div id="ingredients-list" class="space-y-6">
 				{ingredients.sections.map((section) => (
 					<div>
 						<h4 class="text-xs font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500 mb-2">{section.name}</h4>
 						<ul class="divide-y divide-stone-100 dark:divide-stone-800/50">
-							{section.ingredients.map(({ amount, unit, name }) => (
-								<li class="flex items-center justify-between py-2.5">
-									<span class="text-sm">{name}</span>
-									<span class="text-sm text-stone-600 dark:text-stone-400 tabular-nums">
-										<span class="ingredient-amount font-medium">{amount}</span> {unit}
-									</span>
-								</li>
-							))}
+							{section.ingredients.map((ing) => {
+								const idx = ingredientIndex++;
+								return (
+									<li class="flex items-center justify-between py-2.5">
+										<span class="text-sm flex items-center gap-1.5">
+											{ing.name}
+											{ing.macros && (
+												<IngredientMacros macros={ing.macros} baseServings={servings} client:load />
+											)}
+										</span>
+										<IngredientAmount
+											amount={ing.amount}
+											unit={ing.unit}
+											gPerDl={ing.gPerDl}
+											index={idx}
+											client:load
+										/>
+									</li>
+								);
+							})}
 						</ul>
 					</div>
 				))}
 			</div>
 		) : (
 			<ul id="ingredients-list" class="divide-y divide-stone-100 dark:divide-stone-800/50">
-				{ingredients.map(({ amount, unit, name }) => (
-					<li class="flex items-center justify-between py-2.5">
-						<span class="text-sm">{name}</span>
-						<span class="text-sm text-stone-600 dark:text-stone-400 tabular-nums">
-							<span class="ingredient-amount font-medium">{amount}</span> {unit}
-						</span>
-					</li>
-				))}
+				{ingredients.map((ing) => {
+					const idx = ingredientIndex++;
+					return (
+						<li class="flex items-center justify-between py-2.5">
+							<span class="text-sm flex items-center gap-1.5">
+								{ing.name}
+								{ing.macros && (
+									<IngredientMacros macros={ing.macros} baseServings={servings} client:load />
+								)}
+							</span>
+							<IngredientAmount
+								amount={ing.amount}
+								unit={ing.unit}
+								gPerDl={ing.gPerDl}
+								index={idx}
+								client:load
+							/>
+						</li>
+					);
+				})}
 			</ul>
 		)}
 	</div>
@@ -160,6 +202,7 @@ const data = JSON.stringify({ servings, ingredients: flatIngredients, macros });
 		var recipe = JSON.parse(el.dataset.recipe);
 		var baseServings = recipe.servings;
 		var input = document.getElementById('servings-input');
+		var totalSection = document.getElementById('macro-total-section');
 
 		function round(n) {
 			return Math.round(n * 10) / 10;
@@ -191,12 +234,45 @@ const data = JSON.stringify({ servings, ingredients: flatIngredients, macros });
 			setMacro('macro-fat-total', round(recipe.macros.fat * newServings), 'g');
 			setMacro('macro-fiber-total', round((recipe.macros.fiber || 0) * newServings), 'g');
 
-			var amounts = document.querySelectorAll('#ingredients-list .ingredient-amount');
-			for (var i = 0; i < amounts.length; i++) {
-				amounts[i].textContent = round(recipe.ingredients[i].amount * ratio);
+			// Animate total section visibility
+			if (totalSection) {
+				if (newServings === 1) {
+					totalSection.style.maxHeight = '0';
+					totalSection.style.opacity = '0';
+					totalSection.style.marginTop = '0';
+					totalSection.style.borderWidth = '0';
+				} else {
+					totalSection.style.maxHeight = '200px';
+					totalSection.style.opacity = '1';
+					totalSection.style.marginTop = '';
+					totalSection.style.borderWidth = '';
+				}
 			}
+
+			// Dispatch event for React components
+			var amounts = recipe.ingredients.map(function (ing) {
+				return round(ing.amount * ratio);
+			});
+			window.dispatchEvent(new CustomEvent('ingredients-update', {
+				detail: { amounts: amounts, servings: newServings, ratio: ratio }
+			}));
 		}
 
 		input.addEventListener('input', update);
+
+		// Sync on page load (browser may restore input value)
+		var initialServings = parseInt(input.value, 10) || baseServings;
+		if (totalSection) {
+			totalSection.style.transition = 'none';
+		}
+		if (initialServings !== baseServings || initialServings === 1) {
+			update();
+		}
+		// Re-enable transitions after initial sync
+		requestAnimationFrame(function() {
+			if (totalSection) {
+				totalSection.style.transition = '';
+			}
+		});
 	})();
 </script>

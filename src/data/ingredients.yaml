@@ -198,3 +198,27 @@ ingredients:
     sources:
       - url: https://www.nutritionvalue.org/Tomatoes%2C_raw_74101000_nutritional_value.html
         label: NutritionValue.org
+
+  - ref: blueberries
+    name: Blueberries
+    per100g:
+      calories: 57
+      protein: 0.7
+      carbs: 14.5
+      fat: 0.3
+      fiber: 2
+    sources:
+      - url: https://foods.fatsecret.com/calories-nutrition/usda/blueberries?portionid=58492&portionamount=100.000
+        label: USDA via FatSecret
+
+  - ref: nicks-fiber-syrup
+    name: Nick's Fiber Syrup
+    per100g:
+      calories: 150
+      protein: 0
+      carbs: 14
+      fat: 0
+      fiber: 52
+    sources:
+      - url: https://www.fatsecret.se/kalorier-n%C3%A4ring/nicks/fiber-syrup/100g
+        label: FatSecret Sweden
