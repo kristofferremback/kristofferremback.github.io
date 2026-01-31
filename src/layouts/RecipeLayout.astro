@@ -43,9 +43,55 @@ interface Props {
 	ingredients: Ingredients;
 	tags: string[];
 	headings?: Heading[];
+	recipeBody?: string;
 }
 
-const { id, title, description, prepTime, cookTime, servings, macros, ingredients, tags, headings = [] } = Astro.props;
+const { id, title, description, prepTime, cookTime, servings, macros, ingredients, tags, headings = [], recipeBody = '' } = Astro.props;
+
+const isSectioned = 'sections' in ingredients;
+const flatIngredients = isSectioned
+	? ingredients.sections.flatMap((s) => s.ingredients)
+	: ingredients;
+
+function formatIngredient(i: Ingredient): string {
+	return `- ${i.amount} ${i.unit} ${i.name}`;
+}
+
+const timeLine = [prepTime && `Prep: ${prepTime}`, cookTime && `Cook: ${cookTime}`]
+	.filter(Boolean)
+	.join(' | ');
+
+let ingredientsMarkdown: string;
+if (isSectioned) {
+	ingredientsMarkdown = ingredients.sections
+		.map((section) => `### ${section.name}\n${section.ingredients.map(formatIngredient).join('\n')}`)
+		.join('\n\n');
+} else {
+	ingredientsMarkdown = ingredients.map(formatIngredient).join('\n');
+}
+
+const recipeMarkdownShort = `# ${title}
+
+${description}
+
+Servings: ${servings}${timeLine ? ` | ${timeLine}` : ''}
+
+## Macros (per serving)
+- Calories: ${macros.calories}
+- Protein: ${macros.protein}g
+- Carbs: ${macros.carbs}g
+- Fat: ${macros.fat}g
+- Fiber: ${macros.fiber}g
+
+## Ingredients
+
+${ingredientsMarkdown}`.trim();
+
+const recipeMarkdown = recipeBody
+	? `${recipeMarkdownShort}
+
+${recipeBody}`.trim()
+	: recipeMarkdownShort;
 ---
 
 <BaseLayout title={`${title} — Recipes`} description={description}>
@@ -94,7 +140,7 @@ const { id, title, description, prepTime, cookTime, servings, macros, ingredient
 				<a href={`/ai/recipes/${id}`} class="hover:text-stone-900 dark:hover:text-stone-100 transition-colors">
 					View as Markdown
 				</a>
-				<AIChatButton recipeTitle={title} recipeId={id} client:load />
+				<AIChatButton recipeId={id} recipeMarkdown={recipeMarkdown} recipeMarkdownShort={recipeMarkdownShort} client:load />
 			</div>
 		</footer>
 	</article>
