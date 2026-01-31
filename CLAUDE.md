@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Personal website built with **Astro 5** and **Tailwind CSS v4**, using **Bun** as the package manager. Blog-focused homepage with a recipes section. Static site output deployed to GitHub Pages.
+Personal website built with **Astro 5** and **Tailwind CSS v4**, using **Bun** as the package manager. Blog-focused homepage with a recipes section. Static site output deployed to GitHub Pages at **https://kristoffer.remback.se**.
 
 ## Commands
 
@@ -23,6 +23,24 @@ bun astro      # Run Astro CLI commands directly
 - Standard Astro file-based routing: `src/pages/` maps to URL paths
 - Layouts use `<slot />` for composition
 - Static assets in `public/` are served as-is at the root URL
+- Custom domain configured via `public/CNAME` file → copied to build output for GitHub Pages
+
+## React vs Astro Components
+
+**When to use React** (`client:load` / `client:visible`):
+- Interactive elements with state (scroll observers, toggles, forms)
+- Components that need cleanup on unmount (IntersectionObserver, event listeners)
+- Anything that must re-initialize after View Transitions navigation
+
+**When to use Astro/plain HTML**:
+- Static content and layouts
+- Server-rendered markup that doesn't need hydration
+- Simple elements without interactivity
+
+**Current React components:**
+- `AIChatButton` — AI chat dialog for recipes
+- `TableOfContents` — Blog sidebar with scroll-spy and back-to-top
+- `RecipeSidebar` — Recipe sidebar with TOC, ingredients list, back-to-top
 
 ## Content Collections
 

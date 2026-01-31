@@ -1,8 +1,10 @@
-# kristofferremback.github.io
+# kristoffer.remback.se
 
 Personal website. Blog posts, recipes, and whatever else comes to mind.
 
-Built with [Astro 5](https://astro.build) and [Tailwind CSS v4](https://tailwindcss.com). Deployed to GitHub Pages.
+**Live at:** https://kristoffer.remback.se
+
+Built with [Astro 5](https://astro.build) and [Tailwind CSS v4](https://tailwindcss.com). Deployed to GitHub Pages with custom domain.
 
 ## Development
 

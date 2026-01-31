@@ -1,7 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import PortionCalculator from '../components/PortionCalculator.astro';
-import RecipeSidebar from '../components/RecipeSidebar.astro';
+import { RecipeSidebar } from '../components/RecipeSidebar';
 import RecipeSchema from '../components/RecipeSchema.astro';
 import { AIChatButton } from '../components/AIChatButton';
 
@@ -165,5 +165,5 @@ ${recipeBody}`.trim()
 			</div>
 		</footer>
 	</article>
-	<RecipeSidebar headings={headings} ingredients={ingredients} servings={servings} />
+	<RecipeSidebar headings={headings} ingredients={ingredients} servings={servings} client:load />
 </BaseLayout>

@@ -1,6 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import TableOfContents from '../components/TableOfContents.astro';
+import { TableOfContents } from '../components/TableOfContents';
 import ArticleSchema from '../components/ArticleSchema.astro';
 
 interface Heading {
@@ -70,5 +70,5 @@ const updatedStr = updatedDate?.toLocaleDateString('en-US', { year: 'numeric', m
 			</a>
 		</footer>
 	</article>
-	<TableOfContents headings={headings} />
+	<TableOfContents headings={headings} client:load />
 </BaseLayout>
