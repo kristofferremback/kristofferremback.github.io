@@ -112,12 +112,15 @@ ingredients:
   - ref: nicks-sweetener
     name: Nick's Use Like Sugar
     per100g:
-      calories: 0
+      calories: 108
       protein: 0
       carbs: 0
       fat: 0
-      fiber: 0
+      fiber: 22
     g_per_dl: 50
+    sources:
+      - url: https://nicks.dk/products/use-like-sugar
+        label: Nick's EU Official
 
   - ref: casein-vanilla
     name: Vanilla protein powder (Casein)
