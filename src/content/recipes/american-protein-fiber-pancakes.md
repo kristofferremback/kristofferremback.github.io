@@ -47,10 +47,10 @@ ingredients:
           amount: 50
           unit: g
         - ref: vanilla-quark
-          amount: 100
+          amount: 150
           unit: g
         - ref: nicks-fiber-syrup
-          amount: 45
+          amount: 25
           unit: g
 ---
 
