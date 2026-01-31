@@ -9,8 +9,18 @@ const navLinks = [
 
 <header class="border-b border-stone-200 dark:border-stone-800">
 	<nav class="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
-		<a href="/" class="text-lg font-semibold tracking-tight hover:text-stone-500 dark:hover:text-stone-400 transition-colors">
-			Kristoffer Remback
+		<a href="/" class="group flex items-center gap-2.5">
+			<!-- K Logo Mark -->
+			<svg viewBox="0 0 64 64" class="w-8 h-8 transition-transform duration-300 group-hover:scale-105">
+				<rect width="64" height="64" class="fill-stone-900 dark:fill-stone-100" rx="8"/>
+				<rect x="12" y="12" width="14" height="40" rx="3" class="fill-stone-50 dark:fill-stone-900"/>
+				<rect x="30" y="12" width="14" height="16" rx="3" class="fill-stone-50 dark:fill-stone-900" transform="rotate(12 37 20)"/>
+				<rect x="30" y="36" width="14" height="16" rx="3" class="fill-stone-50 dark:fill-stone-900" transform="rotate(-12 37 44)"/>
+			</svg>
+			<!-- Text: bold "remback" -->
+			<span class="text-lg font-bold tracking-tight text-stone-900 dark:text-stone-100 transition-colors group-hover:text-stone-600 dark:group-hover:text-stone-400">
+				remback
+			</span>
 		</a>
 		<div class="flex items-center gap-6">
 			{navLinks.map(({ href, label }) => (
