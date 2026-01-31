@@ -27,8 +27,8 @@ const { id, title, description, macros, tags, prepTime, cookTime } = Astro.props
 		</div>
 		<p class="mt-1.5 text-sm text-stone-600 dark:text-stone-300">{description}</p>
 	</a>
-	<div class="mt-4 flex items-center justify-between">
-		<div class="flex gap-2">
+	<div class="mt-4 flex flex-wrap items-center gap-2 sm:justify-between">
+		<div class="flex flex-wrap gap-2">
 			{tags.map((tag) => (
 				<a
 					href={`/tags/${tag}`}
