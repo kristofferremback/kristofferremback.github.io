@@ -12,6 +12,7 @@ interface Macros {
 interface Props {
 	macros: Macros;
 	baseServings: number;
+	notes?: string;
 }
 
 function round(n: number): number {
@@ -29,7 +30,7 @@ function scaleMacros(macros: Macros, ratio: number): Macros {
 	};
 }
 
-export function IngredientMacros({ macros: baseMacros, baseServings }: Props) {
+export function IngredientMacros({ macros: baseMacros, baseServings, notes }: Props) {
 	const [servings, setServings] = useState(baseServings);
 
 	useEffect(() => {
@@ -128,6 +129,13 @@ export function IngredientMacros({ macros: baseMacros, baseServings }: Props) {
 								</div>
 							</div>
 						</>
+					)}
+
+					{/* Notes */}
+					{notes && (
+						<div className="px-3 py-2 border-t border-black/10 dark:border-white/10 text-[11px] opacity-70 italic">
+							{notes}
+						</div>
 					)}
 				</div>
 			</TooltipContent>

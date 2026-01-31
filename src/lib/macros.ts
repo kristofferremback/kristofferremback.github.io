@@ -24,6 +24,7 @@ export interface ResolvedIngredient {
 	grams: number;
 	macros: IngredientMacros;
 	gPerDl?: number;
+	notes?: string;
 }
 
 export interface ResolvedSection {
@@ -125,6 +126,7 @@ export function resolveIngredient(ingredient: RecipeIngredient): ResolvedIngredi
 		grams,
 		macros,
 		gPerDl: entry.g_per_dl,
+		notes: entry.notes,
 	};
 }
 

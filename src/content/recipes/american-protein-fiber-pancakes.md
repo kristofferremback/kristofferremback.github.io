@@ -32,7 +32,7 @@ ingredients:
           name: Medium sized egg
           amount: 1
           unit: medium
-        - ref: milk-whole
+        - ref: mellanmjolk
           amount: 100
           unit: ml
         - ref: vanilla-quark

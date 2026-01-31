@@ -156,24 +156,26 @@ ingredients:
       large: 60
       whole: 50
 
-  - ref: milk-whole
-    name: Whole milk
+  - ref: mellanmjolk
+    name: Semi-skimmed milk (1.5%)
     per100g:
-      calories: 61
-      protein: 3.2
-      carbs: 4.8
-      fat: 3.3
+      calories: 46
+      protein: 3.4
+      carbs: 4.9
+      fat: 1.5
       fiber: 0
     g_per_dl: 103
+    notes: Called "Mellanmjölk" in Swedish
 
   - ref: vanilla-quark
-    name: Vanilla Quark (Vaniljkvarg)
+    name: Vanilla quark
     per100g:
       calories: 68
       protein: 10
       carbs: 5
       fat: 0.3
       fiber: 0
+    notes: Called "Vaniljkvarg" in Swedish
 
   - ref: dark-chocolate-chips
     name: Dark chocolate chips

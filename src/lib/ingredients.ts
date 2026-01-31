@@ -21,6 +21,7 @@ export interface IngredientEntry {
 	g_per_dl?: number;
 	units?: Record<string, number>;
 	sources?: IngredientSource[];
+	notes?: string;
 }
 
 interface IngredientsFile {
