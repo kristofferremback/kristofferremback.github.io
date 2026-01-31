@@ -8,6 +8,13 @@ interface Ingredient {
 	unit: string;
 }
 
+interface Section {
+	name: string;
+	ingredients: Ingredient[];
+}
+
+type Ingredients = Ingredient[] | { sections: Section[] };
+
 interface Macros {
 	calories: number;
 	protein: number;
@@ -24,7 +31,7 @@ interface Props {
 	cookTime?: string;
 	servings: number;
 	macros: Macros;
-	ingredients: Ingredient[];
+	ingredients: Ingredients;
 	tags: string[];
 }
 

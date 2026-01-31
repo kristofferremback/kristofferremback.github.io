@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import RecipeLayout from '../../layouts/RecipeLayout.astro';
-import { calculateRecipeMacros } from '../../lib/macros';
+import { calculateRecipeMacros, isSectioned } from '../../lib/macros';
 
 export async function getStaticPaths() {
 	const recipes = await getCollection('recipes');
@@ -18,11 +18,20 @@ const { perServing, resolved } = calculateRecipeMacros(
 	recipe.data.servings
 );
 
-const ingredients = resolved.map((r) => ({
+const toDisplay = (r: { name: string; amount: number; unit: string }) => ({
 	name: r.name,
 	amount: r.amount,
 	unit: r.unit,
-}));
+});
+
+const ingredients = isSectioned(resolved)
+	? {
+			sections: resolved.sections.map((s) => ({
+				name: s.name,
+				ingredients: s.ingredients.map(toDisplay),
+			})),
+		}
+	: resolved.map(toDisplay);
 ---
 
 <RecipeLayout

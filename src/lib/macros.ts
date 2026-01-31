@@ -8,6 +8,15 @@ export interface RecipeIngredient {
 	grams_per_unit?: number;
 }
 
+export interface IngredientSection {
+	name: string;
+	ingredients: RecipeIngredient[];
+}
+
+export type RecipeIngredients =
+	| RecipeIngredient[]
+	| { sections: IngredientSection[] };
+
 export interface ResolvedIngredient {
 	name: string;
 	amount: number;
@@ -16,10 +25,19 @@ export interface ResolvedIngredient {
 	macros: IngredientMacros;
 }
 
+export interface ResolvedSection {
+	name: string;
+	ingredients: ResolvedIngredient[];
+}
+
+export type ResolvedIngredients =
+	| ResolvedIngredient[]
+	| { sections: ResolvedSection[] };
+
 export interface RecipeMacroResult {
 	total: IngredientMacros;
 	perServing: IngredientMacros;
-	resolved: ResolvedIngredient[];
+	resolved: ResolvedIngredients;
 }
 
 const WEIGHT_TO_GRAMS: Record<string, number> = {
@@ -131,13 +149,46 @@ function divideMacros(macros: IngredientMacros, divisor: number): IngredientMacr
 	};
 }
 
+export function isSectioned<T extends { sections: unknown[] }>(
+	ingredients: T | unknown[]
+): ingredients is T {
+	return typeof ingredients === 'object' && ingredients !== null && 'sections' in ingredients;
+}
+
+export function flattenResolved(resolved: ResolvedIngredients): ResolvedIngredient[] {
+	if (isSectioned(resolved)) {
+		return resolved.sections.flatMap((s) => s.ingredients);
+	}
+	return resolved;
+}
+
+function flattenIngredients(ingredients: RecipeIngredients): RecipeIngredient[] {
+	if (isSectioned(ingredients)) {
+		return ingredients.sections.flatMap((s) => s.ingredients);
+	}
+	return ingredients;
+}
+
 export function calculateRecipeMacros(
-	ingredients: RecipeIngredient[],
+	ingredients: RecipeIngredients,
 	servings: number
 ): RecipeMacroResult {
-	const resolved = ingredients.map(resolveIngredient);
-	const total = sumMacros(resolved.map((r) => r.macros));
+	const flat = flattenIngredients(ingredients);
+	const allResolved = flat.map(resolveIngredient);
+	const total = sumMacros(allResolved.map((r) => r.macros));
 	const perServing = divideMacros(total, servings);
+
+	let resolved: ResolvedIngredients;
+	if (isSectioned(ingredients)) {
+		resolved = {
+			sections: ingredients.sections.map((section) => ({
+				name: section.name,
+				ingredients: section.ingredients.map(resolveIngredient),
+			})),
+		};
+	} else {
+		resolved = allResolved;
+	}
 
 	return { total, perServing, resolved };
 }

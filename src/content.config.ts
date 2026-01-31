@@ -21,6 +21,16 @@ const ingredientSchema = z.object({
 	grams_per_unit: z.number().optional(),
 });
 
+const sectionSchema = z.object({
+	name: z.string(),
+	ingredients: z.array(ingredientSchema),
+});
+
+const ingredientsSchema = z.union([
+	z.array(ingredientSchema),
+	z.object({ sections: z.array(sectionSchema) }),
+]);
+
 const recipes = defineCollection({
 	loader: glob({ pattern: '**/*.md', base: './src/content/recipes' }),
 	schema: z.object({
@@ -32,7 +42,7 @@ const recipes = defineCollection({
 		prepTime: z.string().optional(),
 		cookTime: z.string().optional(),
 		servings: z.number(),
-		ingredients: z.array(ingredientSchema),
+		ingredients: ingredientsSchema,
 	}),
 });
 

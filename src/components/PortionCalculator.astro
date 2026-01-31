@@ -5,6 +5,13 @@ interface Ingredient {
 	unit: string;
 }
 
+interface Section {
+	name: string;
+	ingredients: Ingredient[];
+}
+
+type Ingredients = Ingredient[] | { sections: Section[] };
+
 interface Macros {
 	calories: number;
 	protein: number;
@@ -15,11 +22,16 @@ interface Macros {
 
 interface Props {
 	servings: number;
-	ingredients: Ingredient[];
+	ingredients: Ingredients;
 	macros: Macros;
 }
 
 const { servings, ingredients, macros } = Astro.props;
+
+const isSectioned = 'sections' in ingredients;
+const flatIngredients = isSectioned
+	? ingredients.sections.flatMap((s) => s.ingredients)
+	: ingredients;
 const totalMacros = {
 	calories: macros.calories * servings,
 	protein: macros.protein * servings,
@@ -27,7 +39,7 @@ const totalMacros = {
 	fat: macros.fat * servings,
 	fiber: macros.fiber * servings,
 };
-const data = JSON.stringify({ servings, ingredients, macros });
+const data = JSON.stringify({ servings, ingredients: flatIngredients, macros });
 ---
 
 <div id="portion-calculator" data-recipe={data} class="grid md:grid-cols-[1fr_1.2fr] gap-8">
@@ -109,16 +121,36 @@ const data = JSON.stringify({ servings, ingredients, macros });
 	<!-- Right column: ingredients -->
 	<div>
 		<h3 class="text-sm font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-5">Ingredients</h3>
-		<ul id="ingredients-list" class="divide-y divide-stone-100 dark:divide-stone-800/50">
-			{ingredients.map(({ amount, unit, name }) => (
-				<li class="flex items-center justify-between py-2.5">
-					<span class="text-sm">{name}</span>
-					<span class="text-sm text-stone-600 dark:text-stone-400 tabular-nums">
-						<span class="ingredient-amount font-medium">{amount}</span> {unit}
-					</span>
-				</li>
-			))}
-		</ul>
+		{isSectioned ? (
+			<div id="ingredients-list" class="space-y-6">
+				{ingredients.sections.map((section) => (
+					<div>
+						<h4 class="text-xs font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500 mb-2">{section.name}</h4>
+						<ul class="divide-y divide-stone-100 dark:divide-stone-800/50">
+							{section.ingredients.map(({ amount, unit, name }) => (
+								<li class="flex items-center justify-between py-2.5">
+									<span class="text-sm">{name}</span>
+									<span class="text-sm text-stone-600 dark:text-stone-400 tabular-nums">
+										<span class="ingredient-amount font-medium">{amount}</span> {unit}
+									</span>
+								</li>
+							))}
+						</ul>
+					</div>
+				))}
+			</div>
+		) : (
+			<ul id="ingredients-list" class="divide-y divide-stone-100 dark:divide-stone-800/50">
+				{ingredients.map(({ amount, unit, name }) => (
+					<li class="flex items-center justify-between py-2.5">
+						<span class="text-sm">{name}</span>
+						<span class="text-sm text-stone-600 dark:text-stone-400 tabular-nums">
+							<span class="ingredient-amount font-medium">{amount}</span> {unit}
+						</span>
+					</li>
+				))}
+			</ul>
+		)}
 	</div>
 </div>
 

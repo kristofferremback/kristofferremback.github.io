@@ -1,6 +1,6 @@
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
-import { calculateRecipeMacros } from '../../../lib/macros';
+import { calculateRecipeMacros, isSectioned, type ResolvedIngredient } from '../../../lib/macros';
 
 export const getStaticPaths: GetStaticPaths = async () => {
 	const recipes = await getCollection('recipes');
@@ -8,6 +8,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 		.filter((recipe) => !recipe.data.draft)
 		.map((recipe) => ({ params: { id: recipe.id }, props: { recipe } }));
 };
+
+function formatIngredientRow(i: ResolvedIngredient): string {
+	return `| ${i.amount} ${i.unit} | ${i.name} |`;
+}
 
 export const GET: APIRoute = ({ props }) => {
 	const { recipe } = props;
@@ -19,9 +23,17 @@ export const GET: APIRoute = ({ props }) => {
 		.filter(Boolean)
 		.join(' | ');
 
-	const ingredientRows = resolved
-		.map((i) => `| ${i.amount} ${i.unit} | ${i.name} |`)
-		.join('\n');
+	let ingredientsSection: string;
+	if (isSectioned(resolved)) {
+		ingredientsSection = resolved.sections
+			.map(
+				(section) =>
+					`### ${section.name}\n\n| Amount | Ingredient |\n|--------|------------|\n${section.ingredients.map(formatIngredientRow).join('\n')}`
+			)
+			.join('\n\n');
+	} else {
+		ingredientsSection = `| Amount | Ingredient |\n|--------|------------|\n${resolved.map(formatIngredientRow).join('\n')}`;
+	}
 
 	const markdown = `# ${title}
 
@@ -37,9 +49,7 @@ Servings: ${servings}${timeLine ? `\n${timeLine}` : ''}
 
 ## Ingredients
 
-| Amount | Ingredient |
-|--------|------------|
-${ingredientRows}
+${ingredientsSection}
 
 ${recipe.body}`;
 
