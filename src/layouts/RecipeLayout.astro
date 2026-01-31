@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import PortionCalculator from '../components/PortionCalculator.astro';
 import RecipeSidebar from '../components/RecipeSidebar.astro';
+import RecipeSchema from '../components/RecipeSchema.astro';
 import { AIChatButton } from '../components/AIChatButton';
 
 interface Ingredient {
@@ -36,6 +37,7 @@ interface Props {
 	id: string;
 	title: string;
 	description: string;
+	pubDate: Date;
 	prepTime?: string;
 	cookTime?: string;
 	servings: number;
@@ -46,7 +48,7 @@ interface Props {
 	recipeBody?: string;
 }
 
-const { id, title, description, prepTime, cookTime, servings, macros, ingredients, tags, headings = [], recipeBody = '' } = Astro.props;
+const { id, title, description, pubDate, prepTime, cookTime, servings, macros, ingredients, tags, headings = [], recipeBody = '' } = Astro.props;
 
 const isSectioned = 'sections' in ingredients;
 const flatIngredients = isSectioned
@@ -94,7 +96,26 @@ ${recipeBody}`.trim()
 	: recipeMarkdownShort;
 ---
 
-<BaseLayout title={`${title} — Recipes`} description={description}>
+<BaseLayout
+	title={`${title} — Recipes`}
+	description={description}
+	url={`/recipes/${id}`}
+	type="article"
+	publishedTime={pubDate}
+	tags={tags}
+>
+	<RecipeSchema
+		title={title}
+		description={description}
+		url={`/recipes/${id}`}
+		publishedTime={pubDate}
+		prepTime={prepTime}
+		cookTime={cookTime}
+		servings={servings}
+		macros={macros}
+		ingredients={ingredients}
+		instructions={recipeBody}
+	/>
 	<article>
 		<header class="mb-10 pb-8 border-b border-stone-200 dark:border-stone-800" transition:name={`recipe-${id}`}>
 			<h1 class="text-4xl font-bold tracking-tight">{title}</h1>

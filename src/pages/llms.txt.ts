@@ -1,7 +1,9 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({ site }) => {
+	const baseUrl = site?.href || 'https://kristofferremback.github.io';
+
 	const posts = (await getCollection('blog'))
 		.filter((p) => !p.data.draft)
 		.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -10,31 +12,45 @@ export const GET: APIRoute = async () => {
 		.filter((r) => !r.data.draft)
 		.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-	const postList = posts.map((p) => `- /ai/blog/${p.id}`).join('\n');
-	const recipeList = recipes.map((r) => `- /ai/recipes/${r.id}`).join('\n');
+	const postList = posts
+		.map((p) => `- [${p.data.title}](${baseUrl}ai/blog/${p.id}): ${p.data.description}`)
+		.join('\n');
 
-	const body = `# Kristoffer Remback — Personal Site
+	const recipeList = recipes
+		.map((r) => `- [${r.data.title}](${baseUrl}ai/recipes/${r.id}): ${r.data.description}`)
+		.join('\n');
 
-> Personal website with blog posts and recipes.
+	const body = `# Kristoffer Remback
 
-This site provides LLM-friendly markdown endpoints for all content.
+> Personal blog and recipe collection focused on software engineering and healthy living.
+
+This site provides AI-friendly markdown endpoints for all content.
 
 ## Blog Posts
-
-Blog posts are available as rendered HTML at \`/blog/{id}\` and as raw markdown at \`/ai/blog/{id}\`.
 
 ${postList}
 
 ## Recipes
 
-Recipes are available as rendered HTML at \`/recipes/{id}\` and as raw markdown at \`/ai/recipes/{id}\`.
-Recipe markdown includes structured ingredients and macros tables.
+Recipes include detailed nutritional information (calories, protein, carbs, fat, fiber per serving).
 
 ${recipeList}
 
-## Feeds
+## API Endpoints
 
-- RSS (blog only): /rss.xml
+All content is available as raw markdown:
+
+- \`GET /ai/blog/{post-id}\` → Blog post as \`text/markdown\`
+- \`GET /ai/recipes/{recipe-id}\` → Recipe with ingredients, macros, and instructions as \`text/markdown\`
+
+## Site Structure
+
+- \`/\` - Homepage with blog post list
+- \`/blog/{id}\` - Individual blog posts (HTML)
+- \`/recipes\` - Recipe collection
+- \`/recipes/{id}\` - Individual recipes with interactive portion calculator (HTML)
+- \`/tags/{tag}\` - Content filtered by tag
+- \`/rss.xml\` - RSS feed (blog only)
 `;
 
 	return new Response(body, {

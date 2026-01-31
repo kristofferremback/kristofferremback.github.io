@@ -1,4 +1,13 @@
+# Allow all crawlers
 User-agent: *
 Allow: /
 
+# Exclude AI-specific markdown endpoints from search indexing
+# (These are for AI agents, not web search)
+Disallow: /ai/
+
 Sitemap: https://kristofferremback.github.io/sitemap-index.xml
+
+# AI agent discovery
+# See https://llmstxt.org for specification
+LLMs-Txt: https://kristofferremback.github.io/llms.txt

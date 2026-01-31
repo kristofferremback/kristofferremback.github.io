@@ -1,0 +1,108 @@
+---
+interface Macros {
+	calories: number;
+	protein: number;
+	carbs: number;
+	fat: number;
+	fiber: number;
+}
+
+interface Ingredient {
+	name: string;
+	amount: number;
+	unit: string;
+}
+
+interface Section {
+	name: string;
+	ingredients: Ingredient[];
+}
+
+type Ingredients = Ingredient[] | { sections: Section[] };
+
+interface Props {
+	title: string;
+	description: string;
+	url: string;
+	publishedTime: Date;
+	prepTime?: string;
+	cookTime?: string;
+	servings: number;
+	macros: Macros;
+	ingredients: Ingredients;
+	instructions?: string;
+}
+
+const {
+	title,
+	description,
+	url,
+	publishedTime,
+	prepTime,
+	cookTime,
+	servings,
+	macros,
+	ingredients,
+	instructions,
+} = Astro.props;
+
+const canonicalUrl = new URL(url, Astro.site).href;
+const siteUrl = Astro.site?.href || 'https://kristofferremback.github.io';
+
+function parseTimeToISO(time?: string): string | undefined {
+	if (!time) return undefined;
+	const match = time.match(/(\d+)\s*(min|hour|h|m)/i);
+	if (!match) return undefined;
+	const value = parseInt(match[1], 10);
+	const unit = match[2].toLowerCase();
+	if (unit === 'hour' || unit === 'h') return `PT${value}H`;
+	return `PT${value}M`;
+}
+
+function formatIngredient(i: Ingredient): string {
+	return `${i.amount} ${i.unit} ${i.name}`;
+}
+
+const isSectioned = 'sections' in ingredients;
+const flatIngredients = isSectioned
+	? ingredients.sections.flatMap((s) => s.ingredients)
+	: ingredients;
+
+const prepTimeISO = parseTimeToISO(prepTime);
+const cookTimeISO = parseTimeToISO(cookTime);
+
+const schema = {
+	'@context': 'https://schema.org',
+	'@type': 'Recipe',
+	name: title,
+	description: description,
+	url: canonicalUrl,
+	datePublished: publishedTime.toISOString(),
+	author: {
+		'@type': 'Person',
+		name: 'Kristoffer Remback',
+		url: siteUrl,
+	},
+	...(prepTimeISO && { prepTime: prepTimeISO }),
+	...(cookTimeISO && { cookTime: cookTimeISO }),
+	recipeYield: `${servings} servings`,
+	recipeIngredient: flatIngredients.map(formatIngredient),
+	nutrition: {
+		'@type': 'NutritionInformation',
+		servingSize: '1 serving',
+		calories: `${macros.calories} kcal`,
+		proteinContent: `${macros.protein} g`,
+		carbohydrateContent: `${macros.carbs} g`,
+		fatContent: `${macros.fat} g`,
+		fiberContent: `${macros.fiber} g`,
+	},
+	...(instructions && {
+		recipeInstructions: {
+			'@type': 'HowToSection',
+			text: instructions,
+		},
+	}),
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

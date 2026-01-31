@@ -1,0 +1,51 @@
+---
+interface Props {
+	title: string;
+	description: string;
+	url: string;
+	publishedTime: Date;
+	modifiedTime?: Date;
+	author?: string;
+	tags?: string[];
+}
+
+const {
+	title,
+	description,
+	url,
+	publishedTime,
+	modifiedTime,
+	author = 'Kristoffer Remback',
+	tags = [],
+} = Astro.props;
+
+const canonicalUrl = new URL(url, Astro.site).href;
+const siteUrl = Astro.site?.href || 'https://kristofferremback.github.io';
+
+const schema = {
+	'@context': 'https://schema.org',
+	'@type': 'Article',
+	headline: title,
+	description: description,
+	url: canonicalUrl,
+	datePublished: publishedTime.toISOString(),
+	...(modifiedTime && { dateModified: modifiedTime.toISOString() }),
+	author: {
+		'@type': 'Person',
+		name: author,
+		url: siteUrl,
+	},
+	publisher: {
+		'@type': 'Person',
+		name: author,
+		url: siteUrl,
+	},
+	...(tags.length > 0 && { keywords: tags.join(', ') }),
+	mainEntityOfPage: {
+		'@type': 'WebPage',
+		'@id': canonicalUrl,
+	},
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
