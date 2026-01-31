@@ -2,6 +2,7 @@ import { getIngredient, type IngredientEntry, type IngredientMacros } from './in
 
 export interface RecipeIngredient {
 	ref: string;
+	name?: string;
 	amount: number;
 	unit: string;
 	grams_per_unit?: number;
@@ -99,7 +100,7 @@ export function resolveIngredient(ingredient: RecipeIngredient): ResolvedIngredi
 	const macros = calculateMacros(grams, entry.per100g);
 
 	return {
-		name: entry.name,
+		name: ingredient.name ?? entry.name,
 		amount: ingredient.amount,
 		unit: ingredient.unit,
 		grams,

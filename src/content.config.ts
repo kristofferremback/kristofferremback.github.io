@@ -15,6 +15,7 @@ const blog = defineCollection({
 
 const ingredientSchema = z.object({
 	ref: z.string(),
+	name: z.string().optional(),
 	amount: z.number(),
 	unit: z.string(),
 	grams_per_unit: z.number().optional(),
