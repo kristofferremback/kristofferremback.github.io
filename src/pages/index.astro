@@ -4,7 +4,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const posts = (await getCollection('blog'))
 	.filter((post) => !post.data.draft)
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+	.sort((a, b) => {
+		const dateCompare = b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+		if (dateCompare !== 0) return dateCompare;
+		return a.data.title.localeCompare(b.data.title);
+	});
 
 const rendered = await Promise.all(
 	posts.map(async (post) => ({

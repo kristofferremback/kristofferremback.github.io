@@ -5,25 +5,25 @@ interface Props {
 	id: string;
 	title: string;
 	description: string;
+	pubDate: Date;
 	macros: { calories: number; protein: number; carbs: number; fat: number; fiber: number };
 	tags: string[];
 	prepTime?: string;
 	cookTime?: string;
 }
 
-const { id, title, description, macros, tags, prepTime, cookTime } = Astro.props;
+const { id, title, description, pubDate, macros, tags, prepTime, cookTime } = Astro.props;
 ---
 
 <article class="group rounded-xl border border-stone-200 dark:border-stone-800 p-5 transition-all hover:border-stone-400 dark:hover:border-stone-600 hover:shadow-sm" transition:name={`recipe-${id}`}>
 	<a href={`/recipes/${id}`} class="block">
 		<div class="flex items-start justify-between gap-4">
 			<h2 class="text-lg font-bold">{title}</h2>
-			{(prepTime || cookTime) && (
-				<div class="flex gap-3 text-xs text-stone-500 dark:text-stone-400 shrink-0 pt-1">
-					{prepTime && <span>{prepTime} prep</span>}
-					{cookTime && <span>{cookTime} cook</span>}
-				</div>
-			)}
+			<div class="flex gap-3 text-xs text-stone-500 dark:text-stone-400 shrink-0 pt-1">
+				<time class="local-date" datetime={pubDate.toISOString()}></time>
+				{prepTime && <span>{prepTime} prep</span>}
+				{cookTime && <span>{cookTime} cook</span>}
+			</div>
 		</div>
 		<p class="mt-1.5 text-sm text-stone-600 dark:text-stone-300">{description}</p>
 	</a>

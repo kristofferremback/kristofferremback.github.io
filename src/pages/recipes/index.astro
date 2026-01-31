@@ -6,7 +6,11 @@ import { calculateRecipeMacros } from '../../lib/macros';
 
 const rawRecipes = (await getCollection('recipes'))
 	.filter((recipe) => !recipe.data.draft)
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+	.sort((a, b) => {
+		const dateCompare = b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+		if (dateCompare !== 0) return dateCompare;
+		return a.data.title.localeCompare(b.data.title);
+	});
 
 const recipes = rawRecipes.map((recipe) => {
 	const { perServing } = calculateRecipeMacros(
@@ -26,6 +30,7 @@ const recipes = rawRecipes.map((recipe) => {
 					id={recipe.id}
 					title={recipe.data.title}
 					description={recipe.data.description}
+					pubDate={recipe.data.pubDate}
 					macros={recipe.macros}
 					tags={recipe.data.tags}
 					prepTime={recipe.data.prepTime}

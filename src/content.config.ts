@@ -32,7 +32,7 @@ const ingredientsSchema = z.union([
 ]);
 
 const recipes = defineCollection({
-	loader: glob({ pattern: '**/*.md', base: './src/content/recipes' }),
+	loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/recipes' }),
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),

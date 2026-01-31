@@ -67,6 +67,24 @@ const {
 				document.addEventListener('astro:after-swap', applyTheme);
 			})();
 		</script>
+		<script is:inline>
+			(function () {
+				function formatLocalDates() {
+					document.querySelectorAll('time.local-date').forEach(function (el) {
+						var datetime = el.getAttribute('datetime');
+						if (datetime) {
+							el.textContent = new Date(datetime).toLocaleDateString(undefined, {
+								year: 'numeric',
+								month: 'short',
+								day: 'numeric'
+							});
+						}
+					});
+				}
+				formatLocalDates();
+				document.addEventListener('astro:after-swap', formatLocalDates);
+			})();
+		</script>
 	</head>
 	<body class="grain min-h-screen bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100 font-sans flex flex-col">
 		<div class="scroll-progress"></div>

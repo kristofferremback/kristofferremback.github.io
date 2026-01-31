@@ -227,3 +227,167 @@ ingredients:
     sources:
       - url: https://www.fatsecret.se/kalorier-n%C3%A4ring/nicks/fiber-syrup/100g
         label: FatSecret Sweden
+
+  # Ice cream ingredients
+  - ref: non-fat-greek-yogurt
+    name: Non-fat Greek yogurt
+    per100g:
+      calories: 59
+      protein: 10.2
+      carbs: 3.6
+      fat: 0.4
+      fiber: 0
+    g_per_dl: 105
+    sources:
+      - url: https://fdc.nal.usda.gov/fdc-app.html#/food-details/170894/nutrients
+        label: USDA FoodData Central
+
+  - ref: xanthan-gum
+    name: Xanthan gum
+    per100g:
+      calories: 333
+      protein: 0
+      carbs: 78
+      fat: 0
+      fiber: 78
+    g_per_dl: 50
+    notes: Used in very small amounts as a thickener
+    sources:
+      - url: https://www.nutritionvalue.org/Xanthan_gum_by_NAMASTE_452087_nutritional_value.html
+        label: NutritionValue.org
+
+  - ref: salt
+    name: Table salt
+    per100g:
+      calories: 0
+      protein: 0
+      carbs: 0
+      fat: 0
+      fiber: 0
+    g_per_dl: 130
+    sources:
+      - url: https://fdc.nal.usda.gov/fdc-app.html#/food-details/173468/nutrients
+        label: USDA FoodData Central
+
+  - ref: frozen-blueberries
+    name: Frozen blueberries (unsweetened)
+    per100g:
+      calories: 51
+      protein: 0.4
+      carbs: 12.5
+      fat: 0.4
+      fiber: 3
+    sources:
+      - url: https://fdc.nal.usda.gov/fdc-app.html#/food-details/173950/nutrients
+        label: USDA FoodData Central
+
+  - ref: frozen-passion-fruit
+    name: Frozen passion fruit
+    per100g:
+      calories: 97
+      protein: 2.2
+      carbs: 23
+      fat: 0.7
+      fiber: 10
+    notes: Based on raw passion fruit values
+    sources:
+      - url: https://fdc.nal.usda.gov/fdc-app.html#/food-details/169108/nutrients
+        label: USDA FoodData Central
+
+  - ref: white-chocolate
+    name: White chocolate
+    per100g:
+      calories: 539
+      protein: 5.9
+      carbs: 59.2
+      fat: 32.1
+      fiber: 0.2
+    sources:
+      - url: https://fdc.nal.usda.gov/fdc-app.html#/food-details/167571/nutrients
+        label: USDA FoodData Central
+
+  - ref: daim
+    name: Daim (chocolate with almond caramel)
+    per100g:
+      calories: 543
+      protein: 2.9
+      carbs: 61
+      fat: 32
+      fiber: 1.1
+    notes: Swedish chocolate bar by Marabou
+    sources:
+      - url: https://www.swedishcandyland.com/products/marabou-daim-100g
+        label: Swedish Candy Land
+
+  - ref: body-labs-chocolate-sauce
+    name: Bodylab Zero Topping Chocolate
+    per100g:
+      calories: 40
+      protein: 1
+      carbs: 8
+      fat: 0.5
+      fiber: 0
+    notes: Low-calorie chocolate sauce sweetened with maltitol
+    sources:
+      - url: https://www.bodylab.se/shop/bodylab-zero-topping-958p.html
+        label: Bodylab Sweden
+
+  - ref: body-labs-salted-caramel-sauce
+    name: Bodylab Zero Topping Salted Caramel
+    per100g:
+      calories: 164
+      protein: 0.9
+      carbs: 59
+      fat: 1.5
+      fiber: 6.8
+    notes: Salted caramel sauce sweetened with maltitol
+    sources:
+      - url: https://www.fatsecret.se/kalorier-n%C3%A4ring/bodylab/zero-topping-salted-caramel/100g
+        label: FatSecret Sweden
+
+  - ref: casein-chocolate
+    name: Chocolate protein powder (Casein)
+    per100g:
+      calories: 370
+      protein: 80
+      carbs: 6
+      fat: 1.5
+      fiber: 0
+    g_per_dl: 45
+
+  - ref: cacao-powder
+    name: Unsweetened cacao powder
+    per100g:
+      calories: 228
+      protein: 20
+      carbs: 58
+      fat: 14
+      fiber: 33
+    g_per_dl: 50
+    sources:
+      - url: https://fdc.nal.usda.gov/fdc-app.html#/food-details/169593/nutrients
+        label: USDA FoodData Central
+
+  - ref: frozen-raspberries
+    name: Frozen raspberries (unsweetened)
+    per100g:
+      calories: 52
+      protein: 1.2
+      carbs: 12
+      fat: 0.7
+      fiber: 6.5
+    sources:
+      - url: https://fdc.nal.usda.gov/fdc-app.html#/food-details/167755/nutrients
+        label: USDA FoodData Central
+
+  - ref: mini-marshmallows
+    name: Mini marshmallows
+    per100g:
+      calories: 318
+      protein: 1.8
+      carbs: 81
+      fat: 0.2
+      fiber: 0.1
+    sources:
+      - url: https://fdc.nal.usda.gov/fdc-app.html#/food-details/169655/nutrients
+        label: USDA FoodData Central

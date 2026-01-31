@@ -1,7 +1,7 @@
 ---
 title: (American) Protein and fiber-rich Pancakes
 description: My new go-to pancake recipe for American style pancakes.
-pubDate: 2026-01-30
+pubDate: 2026-01-31T10:00:00
 tags: [breakfast, pancakes, protein, fiber]
 prepTime: 5 min
 cookTime: 10 min

@@ -74,6 +74,7 @@ const { tag, posts, recipes } = Astro.props;
 							id={recipe.id}
 							title={recipe.data.title}
 							description={recipe.data.description}
+							pubDate={recipe.data.pubDate}
 							macros={recipe.macros}
 							tags={recipe.data.tags}
 							prepTime={recipe.data.prepTime}
