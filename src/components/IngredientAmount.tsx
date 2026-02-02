@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { Tooltip } from '@/components/ui/tooltip';
 import { getAlternatives } from '@/lib/conversions';
 
 interface Props {
@@ -41,16 +41,13 @@ export function IngredientAmount({ amount: initialAmount, unit, gPerDl, index }:
 	}
 
 	return (
-		<Tooltip>
-			<TooltipTrigger asChild>
-				<span className="text-sm text-stone-600 dark:text-stone-400 tabular-nums cursor-help">
-					<span className="ingredient-amount font-medium border-b border-dotted border-stone-400 dark:border-stone-500">
-						{round(amount)}
-					</span>{' '}
-					{unit}
-				</span>
-			</TooltipTrigger>
-			<TooltipContent>{alternatives}</TooltipContent>
+		<Tooltip content={alternatives}>
+			<span className="text-sm text-stone-600 dark:text-stone-400 tabular-nums cursor-help">
+				<span className="ingredient-amount font-medium border-b border-dotted border-stone-400 dark:border-stone-500">
+					{round(amount)}
+				</span>{' '}
+				{unit}
+			</span>
 		</Tooltip>
 	);
 }

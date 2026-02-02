@@ -1,4 +1,4 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip } from '@/components/ui/tooltip';
 
 interface Macros {
 	calories: number;
@@ -29,18 +29,15 @@ export default function MacroBadges({ macros }: Props) {
 				const isLast = i === badges.length - 1;
 
 				return (
-					<Tooltip key={key}>
-						<TooltipTrigger asChild>
-							<span
-								className={`px-2 py-1 bg-stone-100 dark:bg-stone-800 font-medium cursor-default ${isFirst ? 'rounded-l-md' : ''} ${isLast ? 'rounded-r-md' : ''}`}
-							>
-								{value}
-								<span className="ml-0.5 font-normal text-stone-500 dark:text-stone-400">
-									{label}
-								</span>
+					<Tooltip key={key} content={tooltip(value)}>
+						<span
+							className={`px-2 py-1 bg-stone-100 dark:bg-stone-800 font-medium cursor-default ${isFirst ? 'rounded-l-md' : ''} ${isLast ? 'rounded-r-md' : ''}`}
+						>
+							{value}
+							<span className="ml-0.5 font-normal text-stone-500 dark:text-stone-400">
+								{label}
 							</span>
-						</TooltipTrigger>
-						<TooltipContent>{tooltip(value)}</TooltipContent>
+						</span>
 					</Tooltip>
 				);
 			})}

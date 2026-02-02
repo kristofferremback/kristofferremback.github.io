@@ -1,4 +1,5 @@
 ---
+import { PortionCalculator } from './PortionCalculator';
 import { IngredientAmount } from './IngredientAmount';
 import { IngredientMacros } from './IngredientMacros';
 
@@ -26,14 +27,6 @@ interface Section {
 
 type Ingredients = Ingredient[] | { sections: Section[] };
 
-interface Macros {
-	calories: number;
-	protein: number;
-	carbs: number;
-	fat: number;
-	fiber: number;
-}
-
 interface Props {
 	servings: number;
 	ingredients: Ingredients;
@@ -46,96 +39,18 @@ const isSectioned = 'sections' in ingredients;
 const flatIngredients = isSectioned
 	? ingredients.sections.flatMap((s) => s.ingredients)
 	: ingredients;
-const totalMacros = {
-	calories: macros.calories * servings,
-	protein: macros.protein * servings,
-	carbs: macros.carbs * servings,
-	fat: macros.fat * servings,
-	fiber: macros.fiber * servings,
-};
-const data = JSON.stringify({ servings, ingredients: flatIngredients, macros });
 
 let ingredientIndex = 0;
 ---
 
-<div id="portion-calculator" data-recipe={data} class="grid md:grid-cols-[1fr_1.2fr] gap-8">
+<div id="portion-calculator" class="grid md:grid-cols-[1fr_1.2fr] gap-8">
 	<!-- Left column: macros + servings -->
-	<div>
-		<div class="flex items-center justify-between mb-5">
-			<h3 class="text-sm font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">Nutrition</h3>
-			<div class="flex items-center gap-2">
-				<label for="servings-input" class="text-sm text-stone-500 dark:text-stone-400">Servings</label>
-				<input
-					id="servings-input"
-					type="number"
-					min="1"
-					value={servings}
-					class="w-16 px-2 py-1 text-sm text-center font-medium border border-stone-300 dark:border-stone-600 rounded-md bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100"
-				/>
-			</div>
-		</div>
-
-		<!-- Per serving -->
-		<div class="rounded-lg border border-stone-200 dark:border-stone-800 overflow-hidden">
-			<div class="px-4 py-2 bg-stone-100 dark:bg-stone-800/50 text-xs font-medium uppercase tracking-wider text-stone-500 dark:text-stone-400">
-				Per serving
-			</div>
-			<div class="grid grid-cols-5 divide-x divide-stone-200 dark:divide-stone-800">
-				<div class="px-2 py-3 text-center">
-					<div id="macro-calories-per" class="text-lg font-bold">{macros.calories}</div>
-					<div class="text-[11px] text-stone-500 dark:text-stone-400">kcal</div>
-				</div>
-				<div class="px-2 py-3 text-center">
-					<div id="macro-protein-per" class="text-lg font-bold">{macros.protein}<span class="text-sm font-normal">g</span></div>
-					<div class="text-[11px] text-stone-500 dark:text-stone-400">protein</div>
-				</div>
-				<div class="px-2 py-3 text-center">
-					<div id="macro-carbs-per" class="text-lg font-bold">{macros.carbs}<span class="text-sm font-normal">g</span></div>
-					<div class="text-[11px] text-stone-500 dark:text-stone-400">carbs</div>
-				</div>
-				<div class="px-2 py-3 text-center">
-					<div id="macro-fat-per" class="text-lg font-bold">{macros.fat}<span class="text-sm font-normal">g</span></div>
-					<div class="text-[11px] text-stone-500 dark:text-stone-400">fat</div>
-				</div>
-				<div class="px-2 py-3 text-center">
-					<div id="macro-fiber-per" class="text-lg font-bold">{macros.fiber}<span class="text-sm font-normal">g</span></div>
-					<div class="text-[11px] text-stone-500 dark:text-stone-400">fiber</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- Total -->
-		<div
-			id="macro-total-section"
-			class="mt-3 rounded-lg border border-stone-200 dark:border-stone-800 overflow-hidden transition-all duration-300 ease-out"
-		>
-			<div class="px-4 py-2 bg-stone-100 dark:bg-stone-800/50 text-xs font-medium uppercase tracking-wider text-stone-500 dark:text-stone-400">
-				Total
-			</div>
-			<div class="grid grid-cols-5 divide-x divide-stone-200 dark:divide-stone-800">
-				<div class="px-2 py-3 text-center">
-					<div id="macro-calories-total" class="text-lg font-bold">{totalMacros.calories}</div>
-					<div class="text-[11px] text-stone-500 dark:text-stone-400">kcal</div>
-				</div>
-				<div class="px-2 py-3 text-center">
-					<div id="macro-protein-total" class="text-lg font-bold">{totalMacros.protein}<span class="text-sm font-normal">g</span></div>
-					<div class="text-[11px] text-stone-500 dark:text-stone-400">protein</div>
-				</div>
-				<div class="px-2 py-3 text-center">
-					<div id="macro-carbs-total" class="text-lg font-bold">{totalMacros.carbs}<span class="text-sm font-normal">g</span></div>
-					<div class="text-[11px] text-stone-500 dark:text-stone-400">carbs</div>
-				</div>
-				<div class="px-2 py-3 text-center">
-					<div id="macro-fat-total" class="text-lg font-bold">{totalMacros.fat}<span class="text-sm font-normal">g</span></div>
-					<div class="text-[11px] text-stone-500 dark:text-stone-400">fat</div>
-				</div>
-				<div class="px-2 py-3 text-center">
-					<div id="macro-fiber-total" class="text-lg font-bold">{totalMacros.fiber}<span class="text-sm font-normal">g</span></div>
-					<div class="text-[11px] text-stone-500 dark:text-stone-400">fiber</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	<PortionCalculator
+		baseServings={servings}
+		ingredients={flatIngredients.map((i) => ({ name: i.name, amount: i.amount, unit: i.unit }))}
+		macros={macros}
+		client:load
+	/>
 
 	<!-- Right column: ingredients -->
 	<div>
@@ -196,84 +111,3 @@ let ingredientIndex = 0;
 		)}
 	</div>
 </div>
-
-<script is:inline>
-	(function () {
-		var el = document.getElementById('portion-calculator');
-		var recipe = JSON.parse(el.dataset.recipe);
-		var baseServings = recipe.servings;
-		var input = document.getElementById('servings-input');
-		var totalSection = document.getElementById('macro-total-section');
-
-		function round(n) {
-			return Math.round(n * 10) / 10;
-		}
-
-		function setMacro(id, value, suffix) {
-			var el = document.getElementById(id);
-			if (suffix) {
-				el.innerHTML = value + '<span class="text-sm font-normal">' + suffix + '</span>';
-			} else {
-				el.textContent = value;
-			}
-		}
-
-		function update() {
-			var newServings = parseInt(input.value, 10);
-			if (!newServings || newServings < 1) return;
-			var ratio = newServings / baseServings;
-
-			setMacro('macro-calories-per', recipe.macros.calories);
-			setMacro('macro-protein-per', recipe.macros.protein, 'g');
-			setMacro('macro-carbs-per', recipe.macros.carbs, 'g');
-			setMacro('macro-fat-per', recipe.macros.fat, 'g');
-			setMacro('macro-fiber-per', recipe.macros.fiber || 0, 'g');
-
-			setMacro('macro-calories-total', round(recipe.macros.calories * newServings));
-			setMacro('macro-protein-total', round(recipe.macros.protein * newServings), 'g');
-			setMacro('macro-carbs-total', round(recipe.macros.carbs * newServings), 'g');
-			setMacro('macro-fat-total', round(recipe.macros.fat * newServings), 'g');
-			setMacro('macro-fiber-total', round((recipe.macros.fiber || 0) * newServings), 'g');
-
-			// Animate total section visibility
-			if (totalSection) {
-				if (newServings === 1) {
-					totalSection.style.maxHeight = '0';
-					totalSection.style.opacity = '0';
-					totalSection.style.marginTop = '0';
-					totalSection.style.borderWidth = '0';
-				} else {
-					totalSection.style.maxHeight = '200px';
-					totalSection.style.opacity = '1';
-					totalSection.style.marginTop = '';
-					totalSection.style.borderWidth = '';
-				}
-			}
-
-			// Dispatch event for React components
-			var amounts = recipe.ingredients.map(function (ing) {
-				return round(ing.amount * ratio);
-			});
-			window.dispatchEvent(new CustomEvent('ingredients-update', {
-				detail: { amounts: amounts, servings: newServings, ratio: ratio }
-			}));
-		}
-
-		input.addEventListener('input', update);
-
-		// Sync on page load (browser may restore input value)
-		var initialServings = parseInt(input.value, 10) || baseServings;
-		if (totalSection) {
-			totalSection.style.transition = 'none';
-		}
-		if (initialServings !== baseServings || initialServings === 1) {
-			update();
-		}
-		// Re-enable transitions after initial sync
-		requestAnimationFrame(function() {
-			if (totalSection) {
-				totalSection.style.transition = '';
-			}
-		});
-	})();
-</script>
