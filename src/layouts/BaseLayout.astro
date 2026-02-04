@@ -128,6 +128,16 @@ const {
 				document.addEventListener('astro:after-swap', setupCopyButtons);
 			})();
 		</script>
+		<script>
+			import * as amplitude from '@amplitude/analytics-browser';
+			import { sessionReplayPlugin } from '@amplitude/plugin-session-replay-browser';
+
+			amplitude.add(sessionReplayPlugin({ sampleRate: 1 }));
+			amplitude.init('5c8261ff5c33aa8137ba6e9d8f1ba0bd', {
+				autocapture: true,
+				serverZone: 'EU',
+			});
+		</script>
 	</head>
 	<body class="grain min-h-screen bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100 font-sans flex flex-col">
 		<div class="scroll-progress"></div>
