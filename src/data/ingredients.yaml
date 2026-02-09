@@ -391,3 +391,45 @@ ingredients:
     sources:
       - url: https://fdc.nal.usda.gov/fdc-app.html#/food-details/169655/nutrients
         label: USDA FoodData Central
+
+  # Protein chocolate bites ingredients
+  - ref: dark-chocolate-70
+    name: Dark chocolate (70%)
+    per100g:
+      calories: 550
+      protein: 10
+      carbs: 45
+      fat: 35
+      fiber: 10
+    notes: Based on Marabou 70% dark chocolate
+
+  - ref: chunky-peanut-butter
+    name: Chunky peanut butter
+    per100g:
+      calories: 589
+      protein: 25.1
+      carbs: 20
+      fat: 50
+      fiber: 0
+    notes: Calculated from 55g = 324 cal, 13.8g protein
+
+  - ref: wafers
+    name: Wafers (smörgåsrån)
+    per100g:
+      calories: 408
+      protein: 10
+      carbs: 70
+      fat: 10
+      fiber: 3.2
+    notes: Calculated from 25g = 102 cal, 2.5g protein, 0.8g fiber
+
+  - ref: flaky-salt
+    name: Flaky salt
+    per100g:
+      calories: 0
+      protein: 0
+      carbs: 0
+      fat: 0
+      fiber: 0
+    units:
+      pinch: 0.5

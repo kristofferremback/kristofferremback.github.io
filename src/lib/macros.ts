@@ -23,6 +23,7 @@ export interface ResolvedIngredient {
 	unit: string;
 	grams: number;
 	macros: IngredientMacros;
+	per100g: IngredientMacros;
 	gPerDl?: number;
 	notes?: string;
 }
@@ -125,6 +126,7 @@ export function resolveIngredient(ingredient: RecipeIngredient): ResolvedIngredi
 		unit: ingredient.unit,
 		grams,
 		macros,
+		per100g: entry.per100g,
 		gPerDl: entry.g_per_dl,
 		notes: entry.notes,
 	};

@@ -11,6 +11,7 @@ interface Macros {
 
 interface Props {
 	macros: Macros;
+	per100g?: Macros;
 	baseServings: number;
 	notes?: string;
 }
@@ -30,7 +31,42 @@ function scaleMacros(macros: Macros, ratio: number): Macros {
 	};
 }
 
-export function IngredientMacros({ macros: baseMacros, baseServings, notes }: Props) {
+function MacroRow({ macros }: { macros: Macros }) {
+	return (
+		<div className="grid grid-cols-5 gap-x-2 px-3 py-2 text-center">
+			<div>
+				<div className="font-medium">{macros.calories}</div>
+				<div className="text-[10px] opacity-60">kcal</div>
+			</div>
+			<div>
+				<div className="font-medium">{macros.protein}g</div>
+				<div className="text-[10px] opacity-60">protein</div>
+			</div>
+			<div>
+				<div className="font-medium">{macros.carbs}g</div>
+				<div className="text-[10px] opacity-60">carbs</div>
+			</div>
+			<div>
+				<div className="font-medium">{macros.fat}g</div>
+				<div className="text-[10px] opacity-60">fat</div>
+			</div>
+			<div>
+				<div className="font-medium">{macros.fiber}g</div>
+				<div className="text-[10px] opacity-60">fiber</div>
+			</div>
+		</div>
+	);
+}
+
+function SectionHeader({ children }: { children: React.ReactNode }) {
+	return (
+		<div className="px-3 py-1.5 bg-black/10 dark:bg-white/10 text-[10px] font-medium uppercase tracking-wider opacity-70">
+			{children}
+		</div>
+	);
+}
+
+export function IngredientMacros({ macros: baseMacros, per100g, baseServings, notes }: Props) {
 	const [servings, setServings] = useState(baseServings);
 
 	useEffect(() => {
@@ -44,70 +80,29 @@ export function IngredientMacros({ macros: baseMacros, baseServings, notes }: Pr
 		};
 	}, []);
 
-	const perServing = baseMacros;
-	const total = scaleMacros(baseMacros, servings);
+	const ratio = servings / baseServings;
+	const perServing = scaleMacros(baseMacros, 1 / servings);
+	const total = scaleMacros(baseMacros, ratio);
 
 	const tooltipContent = (
 		<div className="min-w-[220px]">
-			{/* Per serving */}
-			<div className="px-3 py-1.5 bg-black/10 dark:bg-white/10 text-[10px] font-medium uppercase tracking-wider opacity-70">
-				Per serving
-			</div>
-			<div className="grid grid-cols-5 gap-x-2 px-3 py-2 text-center">
-				<div>
-					<div className="font-medium">{perServing.calories}</div>
-					<div className="text-[10px] opacity-60">kcal</div>
-				</div>
-				<div>
-					<div className="font-medium">{perServing.protein}g</div>
-					<div className="text-[10px] opacity-60">protein</div>
-				</div>
-				<div>
-					<div className="font-medium">{perServing.carbs}g</div>
-					<div className="text-[10px] opacity-60">carbs</div>
-				</div>
-				<div>
-					<div className="font-medium">{perServing.fat}g</div>
-					<div className="text-[10px] opacity-60">fat</div>
-				</div>
-				<div>
-					<div className="font-medium">{perServing.fiber}g</div>
-					<div className="text-[10px] opacity-60">fiber</div>
-				</div>
-			</div>
-
-			{/* Total - only show if servings > 1 */}
-			{servings > 1 && (
+			{per100g && (
 				<>
-					<div className="px-3 py-1.5 bg-black/10 dark:bg-white/10 text-[10px] font-medium uppercase tracking-wider opacity-70">
-						Total ({servings} servings)
-					</div>
-					<div className="grid grid-cols-5 gap-x-2 px-3 py-2 text-center">
-						<div>
-							<div className="font-medium">{total.calories}</div>
-							<div className="text-[10px] opacity-60">kcal</div>
-						</div>
-						<div>
-							<div className="font-medium">{total.protein}g</div>
-							<div className="text-[10px] opacity-60">protein</div>
-						</div>
-						<div>
-							<div className="font-medium">{total.carbs}g</div>
-							<div className="text-[10px] opacity-60">carbs</div>
-						</div>
-						<div>
-							<div className="font-medium">{total.fat}g</div>
-							<div className="text-[10px] opacity-60">fat</div>
-						</div>
-						<div>
-							<div className="font-medium">{total.fiber}g</div>
-							<div className="text-[10px] opacity-60">fiber</div>
-						</div>
-					</div>
+					<SectionHeader>Per 100g</SectionHeader>
+					<MacroRow macros={per100g} />
 				</>
 			)}
 
-			{/* Notes */}
+			<SectionHeader>Per serving</SectionHeader>
+			<MacroRow macros={perServing} />
+
+			{servings > 1 && (
+				<>
+					<SectionHeader>Full recipe ({servings} servings)</SectionHeader>
+					<MacroRow macros={total} />
+				</>
+			)}
+
 			{notes && (
 				<div className="px-3 py-2 border-t border-black/10 dark:border-white/10 text-[11px] opacity-70 italic">
 					{notes}

@@ -17,6 +17,7 @@ interface Ingredient {
 	unit: string;
 	gPerDl?: number;
 	macros?: Macros;
+	per100g?: Macros;
 	notes?: string;
 }
 
@@ -68,7 +69,7 @@ let ingredientIndex = 0;
 										<span class="text-sm flex items-center gap-1.5">
 											{ing.name}
 											{ing.macros && (
-												<IngredientMacros macros={ing.macros} baseServings={servings} notes={ing.notes} client:load />
+												<IngredientMacros macros={ing.macros} per100g={ing.per100g} baseServings={servings} notes={ing.notes} client:load />
 											)}
 										</span>
 										<IngredientAmount
@@ -94,7 +95,7 @@ let ingredientIndex = 0;
 							<span class="text-sm flex items-center gap-1.5">
 								{ing.name}
 								{ing.macros && (
-									<IngredientMacros macros={ing.macros} baseServings={servings} notes={ing.notes} client:load />
+									<IngredientMacros macros={ing.macros} per100g={ing.per100g} baseServings={servings} notes={ing.notes} client:load />
 								)}
 							</span>
 							<IngredientAmount
