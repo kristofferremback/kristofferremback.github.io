@@ -47,9 +47,10 @@ interface Props {
 	tags: string[];
 	headings?: Heading[];
 	recipeBody?: string;
+	image?: string;
 }
 
-const { id, title, description, pubDate, prepTime, cookTime, servings, macros, ingredients, tags, headings = [], recipeBody = '' } = Astro.props;
+const { id, title, description, pubDate, prepTime, cookTime, servings, macros, ingredients, tags, headings = [], recipeBody = '', image } = Astro.props;
 
 const isSectioned = 'sections' in ingredients;
 const flatIngredients = isSectioned
@@ -154,7 +155,21 @@ ${recipeBody}`.trim()
 			</div>
 		</header>
 
-		<section class="mb-12 animate-in" style="animation-delay: 100ms">
+		{image && (
+			<div class="mb-12 animate-in" style="animation-delay: 50ms">
+				<div class="relative overflow-hidden rounded-xl">
+					<img
+						src={image}
+						alt={title}
+						class="w-full h-auto object-cover"
+						loading="eager"
+					/>
+					<div class="absolute inset-0 rounded-xl ring-1 ring-inset ring-black/10 dark:ring-white/10"></div>
+				</div>
+			</div>
+		)}
+
+		<section class="mb-12 animate-in" style={`animation-delay: ${image ? '150' : '100'}ms`}>
 			<PortionCalculator servings={servings} ingredients={ingredients} macros={macros} />
 		</section>
 
